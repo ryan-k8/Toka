@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;1,100&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/1bf70b1f06.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Toka</title>
+  </head>
+  <body>
+    <!-- app goes here -->
+    <div id="root" class="p-1 alert-parent">
+      <div class="grid-template-holder">
+        <!-- section-a  main-icon(side drawer) search bar , account profile -->
+        <section id="section-a">
+          <div class="flex-container">
+            <div class="app-logo">
+              <i class="fas fa-fan fa-2x"></i>
+            </div>
+            <div class="search-bar">
+              <input
+                type="text"
+                id="searchinput"
+                placeholder="search here e.g, naruto,one piece etc. :) "
+              />
+              <i class="fas fa-search fa-2x search-btn"></i>
+            </div>
+            <div class="account-div">
+          </div>
+        </section>
+        <section id="section-b" class="py-1"></section>
+        <section id="section-c">
+        </section>
+      </div>
+    </div>
+
+    <!-- footer for acknowledgement ?  -->
+    <footer id="footer">
+      <div class="container p-1">
+        <div class="flex-container">
+          <div class="footer-text">
+            <h3>Made with <i class="fas fa-heart"></i> & Pain LOL</h3>
+          </div>
+          <div class="footer-icons">
+            <div>
+              <i class="fab fa-github fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- FIREBASE 🔥 -->
+
+    <!-- firebase sdk -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <!-- firestore db -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+    <!-- firebase auth -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+
+    <!-- dist js-->
+    <script src="./app.bundle.js"></script>
+  </body>
+</html>
