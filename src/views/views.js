@@ -34,7 +34,7 @@ class Views {
 
   accountlogInState(profile) {
     this.componentA.change(new statesA.loggedInState(profile));
-    this.componentA.change(new statesC.loggedInState(profile));
+    this.componentC.change(new statesC.loggedInState(profile));
   }
 
   spinnerState(sectionId) {
@@ -57,6 +57,10 @@ class Views {
 
   renderStreamPlayer(streamData) {
     this.componentC.change(new statesC.streamPlayerState(streamData));
+  }
+
+  renderChangedEpisodePlayer(newSrc) {
+    this.componentC.change(new statesC.changedPlayerSourceState(newSrc));
   }
 }
 

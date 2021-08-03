@@ -85,22 +85,10 @@ const animeTitleState = function (animeData, id) {
 };
 
 const streamPlayerState = function (streamData) {
-  //   <div class="episode-player-div p-1">
-  //     <iframe id="player-iframe"
-  //       src="https://streamtape.com/e/3Wd2JmlXQMFdqx7/naruto-episode-220.mp4"
-  //       frameborder="0"
-  //       allowfullscreen
-  //     ></iframe>
-  //     <div class="stream-selector-div my-1 p-1">
-  //       <a href="#" class="btn btn-stream">streamtape</a>
-  //       <a href="#" class="btn btn-stream">doodstream</a>
-  //       <a href="#" class="btn btn-stream">vidcdn</a>
-  //       <a href="#" class="btn btn-stream">streamsb</a>
-  //       <a href="#" class="btn btn-stream">hydrax</a>
-  //      <a href="#" class="btn btn-stream">hydrax</a>
-  //      <a href="#" class="btn btn-stream">hydrax</a>
-  //     </div>
-  //   </div>
+  const playerDivExists = document.querySelector(".episode-player-div");
+  if (playerDivExists) {
+    document.querySelector(".episode-player-div").remove();
+  }
   const episodePlayerDiv = document.createElement("div");
   episodePlayerDiv.classList.add("episode-player-div", "p-1");
   const iframePlayer = document.createElement("iframe");
@@ -108,16 +96,13 @@ const streamPlayerState = function (streamData) {
   iframePlayer.setAttribute("allowfullscreen", "");
   iframePlayer.setAttribute("frameborder", "0");
 
-  if (streamData.doodstream) {
-    iframePlayer.src = streamData.doodstream;
-  } else {
-    for (let key in streamData) {
-      if (streamData[key]) {
-        iframePlayer.src = streamData[key];
-        break;
-      }
+  for (let key in streamData) {
+    if (streamData[key]) {
+      iframePlayer.src = streamData[key];
+      break;
     }
   }
+
   episodePlayerDiv.appendChild(iframePlayer);
 
   const streamSelectorDiv = document.createElement("div");
@@ -128,7 +113,7 @@ const streamPlayerState = function (streamData) {
       const streamBtn = document.createElement("a");
       streamBtn.classList.add("btn", "btn-stream");
       streamBtn.href = `stream-${key}`;
-      streamBtn.setAttribute(`data-${key}`, value);
+      streamBtn.setAttribute(`data-video`, value);
       streamBtn.textContent = key;
       streamSelectorDiv.appendChild(streamBtn);
     }
@@ -136,6 +121,17 @@ const streamPlayerState = function (streamData) {
 
   episodePlayerDiv.appendChild(streamSelectorDiv);
   document.querySelector(".anime-div").appendChild(episodePlayerDiv);
+
+  // s-scroll to player
+  iframePlayer.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
+const changedPlayerSourceState = function (newSrc) {
+  const player = document.getElementById("player-iframe");
+  player.src = newSrc;
+
+  // s-scroll to player
+  player.scrollIntoView({ behavior: "smooth", block: "center" });
 };
 
 export {
@@ -145,4 +141,5 @@ export {
   searchResultState,
   animeTitleState,
   streamPlayerState,
+  changedPlayerSourceState,
 };

@@ -89,6 +89,7 @@ views.searchBtn.addEventListener("click", async (e) => {
 });
 
 views.mainUI.addEventListener("click", async (e) => {
+  e.preventDefault();
   async function renderAnimeTitle(animeid) {
     views.spinnerState("section-c");
     let apiData = await api.get(
@@ -103,7 +104,8 @@ views.mainUI.addEventListener("click", async (e) => {
   }
 
   if (e.target.classList.contains("anime-selection")) {
-    console.log(e.target);
+    e.preventDefault();
+
     if (e.target.hasAttribute("data-anime-id")) {
       const animeid = e.target.getAttribute("data-anime-id");
       await renderAnimeTitle(animeid);
@@ -130,7 +132,6 @@ views.mainUI.addEventListener("click", async (e) => {
     const data = await api.get(
       `https://powerful-beach-14543.herokuapp.com/stream/${animeid}/ep/${episodeNumber}`
     );
-    console.log(data);
     if (data.episode_exists === "true") {
       const {
         vidcdn: gogocdn = null,
@@ -143,23 +144,28 @@ views.mainUI.addEventListener("click", async (e) => {
       } = data;
 
       const streamObj = {
-        vidcdn: gogocdn,
-        streamsb: streamsb,
+        streamtape: streamtape,
         doodstream: doodstream,
         mixdrop: mixdrop,
+        streamsb: streamsb,
         hydrax: hydrax,
         streamhd: streamhd,
+        vidcdn: gogocdn,
       };
 
-      console.log(streamObj);
       views.renderStreamPlayer(streamObj);
 
-      views.showAlert("success", "Episode found ! :) scroll down");
+      views.showAlert("success", "Episode found ! :)");
     } else {
       views.showAlert(
         "danger",
         "Episode either doesn't exist or not found :-("
       );
     }
+  }
+  if (e.target.classList.contains("btn-stream")) {
+    const newSrc = e.target.getAttribute("data-video");
+
+    views.renderChangedEpisodePlayer(newSrc);
   }
 });
