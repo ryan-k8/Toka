@@ -10,7 +10,6 @@ const views = new Views();
 const api = new lazyReq();
 //account login/logout
 
-
 views.accountComponent.addEventListener("click", async (e) => {
   if (e.target.id === "sign-in-btn") {
     try {
@@ -39,8 +38,8 @@ views.accountComponent.addEventListener("click", async (e) => {
 // search
 views.searchInput.addEventListener("keyup", async (e) => {
   if (e.key === "Enter") {
-    if (e.target.value.trim() === '') {
-      views.showAlert('danger','please enter something :/')
+    if (e.target.value.trim() === "") {
+      views.showAlert("danger", "please enter something :/");
     } else {
       try {
         const query = e.target.value;
@@ -53,7 +52,7 @@ views.searchInput.addEventListener("keyup", async (e) => {
         );
         if (data.length === 0) {
           views.showAlert("danger", "ApiError : Nothing Found : ( ");
-          views.componentC.default()
+          views.componentC.default();
         } else {
           views.searchResultsState(data);
         }
@@ -65,22 +64,20 @@ views.searchInput.addEventListener("keyup", async (e) => {
   }
 });
 views.searchBtn.addEventListener("click", async (e) => {
-
-  if (views.searchInput.value.trim() === '') {
-    views.showAlert('danger','please enter something :/')
+  if (views.searchInput.value.trim() === "") {
+    views.showAlert("danger", "please enter something :/");
   } else {
     try {
-      
       const query = views.searchInput.value;
       views.searchInput.value = null;
-  
+
       views.spinnerState("section-c");
       const data = await api.get(
         `https://powerful-beach-14543.herokuapp.com/search/${query}`
       );
       if (data.length === 0) {
         views.showAlert("danger", "ApiError : Nothing Found : ( ");
-        views.componentC.default()
+        views.componentC.default();
       } else {
         views.searchResultsState(data);
       }
@@ -88,6 +85,81 @@ views.searchBtn.addEventListener("click", async (e) => {
       console.log(err);
       views.showAlert("danger", err);
     }
+  }
+});
 
+views.mainUI.addEventListener("click", async (e) => {
+  async function renderAnimeTitle(animeid) {
+    views.spinnerState("section-c");
+    let apiData = await api.get(
+      `https://powerful-beach-14543.herokuapp.com/getdetails/${animeid}`
+    );
+
+    const animeData = { ...apiData, animeid: animeid };
+
+    views.renderAnimeTitle(animeData);
+
+    // views.componentC.default();
+  }
+
+  if (e.target.classList.contains("anime-selection")) {
+    console.log(e.target);
+    if (e.target.hasAttribute("data-anime-id")) {
+      const animeid = e.target.getAttribute("data-anime-id");
+      await renderAnimeTitle(animeid);
+    } else if (e.target.parentElement.hasAttribute("data-anime-id")) {
+      const animeid = e.target.parentElement.getAttribute("data-anime-id");
+      await renderAnimeTitle(animeid);
+    } else if (
+      e.target.parentElement.parentElement.parentElement.hasAttribute(
+        "data-anime-id"
+      )
+    ) {
+      const animeid =
+        e.target.parentElement.parentElement.parentElement.getAttribute(
+          "data-anime-id"
+        );
+
+      await renderAnimeTitle(animeid);
+    }
+  }
+  if (e.target.className === "watch-btn") {
+    const episodeNumber = document.getElementById("episode-num-input").value;
+    const animeid = e.target.parentElement.getAttribute("data-anime-id");
+
+    const data = await api.get(
+      `https://powerful-beach-14543.herokuapp.com/stream/${animeid}/ep/${episodeNumber}`
+    );
+    console.log(data);
+    if (data.episode_exists === "true") {
+      const {
+        vidcdn: gogocdn = null,
+        streamsb: streamsb = null,
+        streamtape: streamtape = null,
+        doodstream: doodstream = null,
+        server: hydrax = null,
+        mixdrop: mixdrop = null,
+        streamhd: streamhd = null,
+      } = data;
+
+      const streamObj = {
+        vidcdn: gogocdn,
+        streamsb: streamsb,
+        doodstream: doodstream,
+        mixdrop: mixdrop,
+        hydrax: hydrax,
+        streamhd: streamhd,
+      };
+
+      console.log(streamObj);
+      views.renderStreamPlayer(streamObj);
+
+      views.showAlert("success", "Episode found ! :) scroll down");
+    } else {
+      views.showAlert(
+        "danger",
+        "Episode either doesn't exist or not found :-("
+      );
+    }
   }
 });

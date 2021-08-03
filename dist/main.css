@@ -253,7 +253,8 @@ body {
     gap: 0.75rem;
     overflow-y: scroll; }
     #section-c .search-results-div .result-item {
-      height: 200px; }
+      height: 200px;
+      cursor: pointer; }
       #section-c .search-results-div .result-item img {
         display: block;
         height: 100%;
@@ -300,7 +301,7 @@ body {
         #section-c .anime-div #actions-div #episode-watcher #episode-num-input {
           outline: none;
           border: none;
-          padding: 0.8rem 1.2rem;
+          padding: 0.765rem 1.2rem;
           font-size: 1rem;
           border: 1px solid #ccc;
           border-top-left-radius: 6px;
@@ -311,7 +312,7 @@ body {
         #section-c .anime-div #actions-div #episode-watcher .watch-btn {
           text-decoration: none;
           color: black;
-          padding: 0.82rem 0.5rem;
+          padding: 0.85rem 0.5rem;
           background: #2ed573;
           margin-left: -10px;
           border-top-right-radius: 5px;

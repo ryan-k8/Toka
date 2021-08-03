@@ -4,13 +4,15 @@ import * as statesC from "./states/sectionC";
 
 class Views {
   constructor() {
-    this.componentA = new SectionA();
-    this.componentB = new SectionB();
-    this.componentC = new SectionC();
+    this.componentA = new SectionA(); //account
+    this.componentB = new SectionB(); // section-b (firebase lists)
+    this.componentC = new SectionC(); // section-c (main ui)
 
-    this.searchInput = document.getElementById('searchinput');
-    this.searchBtn =  document.querySelector(".search-btn");
-    this.accountComponent =  document.querySelector(".account-div");
+    this.searchInput = document.getElementById("searchinput");
+    this.searchBtn = document.querySelector(".search-btn");
+    this.accountComponent = document.querySelector(".account-div");
+
+    this.mainUI = document.getElementById("section-c");
 
     //setting up initial states
     this.componentA.init();
@@ -47,6 +49,14 @@ class Views {
 
   searchResultsState(result) {
     this.componentC.change(new statesC.searchResultState(result));
+  }
+
+  renderAnimeTitle(animeData) {
+    this.componentC.change(new statesC.animeTitleState(animeData));
+  }
+
+  renderStreamPlayer(streamData) {
+    this.componentC.change(new statesC.streamPlayerState(streamData));
   }
 }
 
