@@ -1,22 +1,25 @@
 import { SectionA, SectionB, SectionC } from "./section";
 import * as statesA from "./states/sectionA";
+import * as statesB from "./states/sectionB";
 import * as statesC from "./states/sectionC";
 
 class Views {
   constructor() {
-    this.componentA = new SectionA(); //account
-    this.componentB = new SectionB(); // section-b (firebase lists)
-    this.componentC = new SectionC(); // section-c (main ui)
+    this.sectionA = new SectionA(); //account
+    this.sectionB = new SectionB(); // section-b (firebase lists)
+    this.sectionC = new SectionC(); // section-c (main ui)
 
     this.searchInput = document.getElementById("searchinput");
     this.searchBtn = document.querySelector(".search-btn");
     this.accountComponent = document.querySelector(".account-div");
 
     this.mainUI = document.getElementById("section-c");
+    this.userList = document.getElementById("section-b");
 
     //setting up initial states
-    this.componentA.init();
-    this.componentC.init();
+    this.sectionA.init();
+    // this.sectionB.init();
+    this.sectionC.init();
   }
 
   showAlert(status, message) {
@@ -33,34 +36,47 @@ class Views {
   }
 
   accountlogInState(profile) {
-    this.componentA.change(new statesA.loggedInState(profile));
-    this.componentC.change(new statesC.loggedInState(profile));
+    this.sectionA.change(new statesA.loggedInState(profile));
+    this.sectionC.change(new statesC.loggedInState(profile));
   }
 
-  spinnerState(sectionId) {
+  renderSpinner(sectionId) {
     if (sectionId === "section-c") {
-      this.componentC.change(new statesC.spinnerState());
+      this.sectionC.change(new statesC.spinnerState());
     }
     if (sectionId === "section-b") {
-      // this.componentB.change(new statesB.spinnerState());
-      console.log("spinners on section-b hehe");
+      this.sectionB.change(new statesB.spinnerState());
+      // console.log("spinners on section-b hehe");
     }
   }
 
   searchResultsState(result) {
-    this.componentC.change(new statesC.searchResultState(result));
+    this.sectionC.change(new statesC.searchResultState(result));
   }
 
-  renderAnimeTitle(animeData) {
-    this.componentC.change(new statesC.animeTitleState(animeData));
+  renderAnimeTitle(animeData, options = { inList: false }) {
+    this.sectionC.change(new statesC.animeTitleState(animeData, options));
   }
 
   renderStreamPlayer(streamData) {
-    this.componentC.change(new statesC.streamPlayerState(streamData));
+    this.sectionC.change(new statesC.streamPlayerState(streamData));
   }
 
   renderChangedEpisodePlayer(newSrc) {
-    this.componentC.change(new statesC.changedPlayerSourceState(newSrc));
+    this.sectionC.change(new statesC.changedPlayerSourceState(newSrc));
+  }
+
+  renderUserAnimeList(animeListArr) {
+    this.sectionB.change(new statesB.userListState(animeListArr));
+  }
+
+  clearFields() {
+    this.searchInput.value = null;
+    document.getElementById("episode-num-input").value = null;
+  }
+
+  getEpNumber() {
+    return document.getElementById("episode-num-input").value;
   }
 }
 

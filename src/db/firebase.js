@@ -35,6 +35,39 @@ class FirebaseHelper {
         .catch((err) => reject(err));
     });
   }
+
+  static getUserList(userEmail) {
+    return new Promise((resolve, reject) => {
+      const docRef = this.db.collection("users").doc(userEmail);
+
+      docRef
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            resolve({
+              exists: true,
+              ...doc.data(),
+            });
+          } else {
+            resolve({
+              exists: false,
+            });
+          }
+        })
+        .catch((err) => reject(`Firestore Error : ${err}`));
+    });
+  }
+
+  static setUserList(userEmail, data) {
+    return new Promise((resolve, reject) => {
+      const userRef = this.db.collection("users").doc(userEmail);
+
+      userRef
+        .set(data)
+        .then(() => resolve("done!"))
+        .catch((err) => reject(err));
+    });
+  }
 }
 
 export default FirebaseHelper;

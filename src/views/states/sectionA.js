@@ -21,7 +21,7 @@ const loggedInState = function (profile) {
     `;
   document.querySelector(
     ".profile-account"
-  ).style.background = `url(${profile.photoURL}) no-repeat center center/cover`;
+  ).style.background = `url(${profile.profileImage}) no-repeat center center/cover`;
 };
 
 export { loggedOutState, loggedInState };

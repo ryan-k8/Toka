@@ -14393,6 +14393,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -14440,6 +14444,44 @@ var FirebaseHelper = /*#__PURE__*/function () {
         });
       });
     }
+  }, {
+    key: "getUserList",
+    value: function getUserList(userEmail) {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        var docRef = _this2.db.collection("users").doc(userEmail);
+
+        docRef.get().then(function (doc) {
+          if (doc.exists) {
+            resolve(_objectSpread({
+              exists: true
+            }, doc.data()));
+          } else {
+            resolve({
+              exists: false
+            });
+          }
+        })["catch"](function (err) {
+          return reject("Firestore Error : ".concat(err));
+        });
+      });
+    }
+  }, {
+    key: "setUserList",
+    value: function setUserList(userEmail, data) {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        var userRef = _this3.db.collection("users").doc(userEmail);
+
+        userRef.set(data).then(function () {
+          return resolve("done!");
+        })["catch"](function (err) {
+          return reject(err);
+        });
+      });
+    }
   }]);
 
   return FirebaseHelper;
@@ -14460,10 +14502,238 @@ _defineProperty(FirebaseHelper, "provider", new firebase.auth.GoogleAuthProvider
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "LocalStorage": () => (/* binding */ LocalStorage)
+/* harmony export */ });
+/* harmony import */ var _firebase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(396);
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+//local storage
+
+
+var LocalStorage = /*#__PURE__*/function () {
+  function LocalStorage() {
+    _classCallCheck(this, LocalStorage);
+
+    this.clear();
+  }
+
+  _createClass(LocalStorage, [{
+    key: "init",
+    value: function init(profile) {
+      localStorage.setItem("local", JSON.stringify({
+        credentials: profile,
+        data: null
+      }));
+      this.update();
+    }
+  }, {
+    key: "get",
+    value: function get() {
+      return JSON.parse(localStorage.getItem("local"));
+    }
+  }, {
+    key: "update",
+    value: function () {
+      var _update = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var data, updatedData, Db;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                data = this.get();
+                _context.prev = 1;
+                _context.next = 4;
+                return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.getUserList(data.credentials.userEmail);
+
+              case 4:
+                updatedData = _context.sent;
+                Db = this.get();
+                Db.data = updatedData;
+                localStorage.setItem("local", JSON.stringify(Db));
+                _context.next = 13;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](1);
+                console.log(_context.t0);
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[1, 10]]);
+      }));
+
+      function update() {
+        return _update.apply(this, arguments);
+      }
+
+      return update;
+    }()
+  }, {
+    key: "clear",
+    value: function clear() {
+      localStorage.clear();
+    }
+  }]);
+
+  return LocalStorage;
+}();
+
+
+
+/***/ }),
+/* 398 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _section__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(398);
-/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(399);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/** *
+ * LazyReq - simple library for making http requests
+ *
+ * version  2.0 (es6)
+ */
+var lazyReq = /*#__PURE__*/function () {
+  function lazyReq() {
+    _classCallCheck(this, lazyReq);
+  }
+
+  _createClass(lazyReq, [{
+    key: "get",
+    value: // get
+    function get(url) {
+      return new Promise(function (resolve, reject) {
+        fetch(url).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return resolve(data);
+        })["catch"](function (error) {
+          return reject(error);
+        });
+      });
+    } // post
+
+  }, {
+    key: "post",
+    value: function post(url, data) {
+      var isJsonObj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      return new Promise(function (resolve, reject) {
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          // no need of stringifying a JSON string
+          body: isJsonObj ? JSON.stringify(data) : data
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return resolve(data);
+        })["catch"](function (error) {
+          return reject(error);
+        });
+      });
+    } // put
+
+  }, {
+    key: "put",
+    value: function put(url, data) {
+      var isJsonObj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      return new Promise(function (resolve, reject) {
+        fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: isJsonObj ? JSON.stringify(data) : data
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return resolve(data);
+        })["catch"](function (error) {
+          return reject(error);
+        });
+      });
+    } // patch
+
+  }, {
+    key: "patch",
+    value: function patch(url, data) {
+      var isJsonObj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      return new Promise(function (resolve, reject) {
+        fetch(url, {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: isJsonObj ? JSON.stringify(data) : data
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return resolve(data);
+        })["catch"](function (error) {
+          return reject(error);
+        });
+      });
+    } // delete
+
+  }, {
+    key: "delete",
+    value: function _delete(url) {
+      return new Promise(function (resolve, reject) {
+        fetch(url, {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json"
+          }
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return resolve("resource deleted");
+        })["catch"](function (error) {
+          return reject(error);
+        });
+      });
+    }
+  }]);
+
+  return lazyReq;
+}();
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (lazyReq);
+
+/***/ }),
+/* 399 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _section__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(400);
+/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(401);
+/* harmony import */ var _states_sectionB__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(402);
+/* harmony import */ var _states_sectionC__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(403);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -14473,21 +14743,95 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+
 var Views = /*#__PURE__*/function () {
   function Views() {
     _classCallCheck(this, Views);
 
-    this.componentA = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionA(); // this.componentB = new sectionB();
-    // this.componentC = new sectionC();
-    //setting up initial states
+    this.sectionA = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionA(); //account
 
-    this.componentA.init();
+    this.sectionB = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionB(); // section-b (firebase lists)
+
+    this.sectionC = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionC(); // section-c (main ui)
+
+    this.searchInput = document.getElementById("searchinput");
+    this.searchBtn = document.querySelector(".search-btn");
+    this.accountComponent = document.querySelector(".account-div");
+    this.mainUI = document.getElementById("section-c");
+    this.savedList = document.getElementById("section-b"); //setting up initial states
+
+    this.sectionA.init(); // this.sectionB.init();
+
+    this.sectionC.init();
   }
 
   _createClass(Views, [{
+    key: "showAlert",
+    value: function showAlert(status, message) {
+      var alertDiv = document.createElement("div");
+      alertDiv.classList.add("alert", "".concat(status), "p-1");
+      alertDiv.innerHTML = "\n    <p class=\"alert-message\">".concat(message, "</p>\n  <i class=\"alert-close-btn fas fa-times\"></i>\n    ");
+      document.querySelector(".alert-parent").prepend(alertDiv);
+      setTimeout(function () {
+        document.querySelector(".alert").remove();
+      }, 2200);
+    }
+  }, {
     key: "accountlogInState",
     value: function accountlogInState(profile) {
-      this.componentA.change(new _states_sectionA__WEBPACK_IMPORTED_MODULE_1__.loggedInState(profile));
+      this.sectionA.change(new _states_sectionA__WEBPACK_IMPORTED_MODULE_1__.loggedInState(profile));
+      this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.loggedInState(profile));
+    }
+  }, {
+    key: "renderSpinner",
+    value: function renderSpinner(sectionId) {
+      if (sectionId === "section-c") {
+        this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.spinnerState());
+      }
+
+      if (sectionId === "section-b") {
+        this.sectionB.change(new _states_sectionB__WEBPACK_IMPORTED_MODULE_2__.spinnerState()); // console.log("spinners on section-b hehe");
+      }
+    }
+  }, {
+    key: "searchResultsState",
+    value: function searchResultsState(result) {
+      this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.searchResultState(result));
+    }
+  }, {
+    key: "renderAnimeTitle",
+    value: function renderAnimeTitle(animeData) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        inList: false
+      };
+      this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.animeTitleState(animeData, options));
+    }
+  }, {
+    key: "renderStreamPlayer",
+    value: function renderStreamPlayer(streamData) {
+      this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.streamPlayerState(streamData));
+    }
+  }, {
+    key: "renderChangedEpisodePlayer",
+    value: function renderChangedEpisodePlayer(newSrc) {
+      this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.changedPlayerSourceState(newSrc));
+    }
+  }, {
+    key: "renderUserAnimeList",
+    value: function renderUserAnimeList(animeListArr) {
+      this.sectionB.change(new _states_sectionB__WEBPACK_IMPORTED_MODULE_2__.userListState(animeListArr));
+    }
+  }, {
+    key: "clearFields",
+    value: function clearFields() {
+      this.searchInput.value = null;
+      document.getElementById("episode-num-input").value = null;
+    }
+  }, {
+    key: "getEpNumber",
+    value: function getEpNumber() {
+      return document.getElementById("episode-num-input").value;
     }
   }]);
 
@@ -14497,7 +14841,7 @@ var Views = /*#__PURE__*/function () {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Views);
 
 /***/ }),
-/* 398 */
+/* 400 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14505,14 +14849,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SectionA": () => (/* binding */ SectionA),
 /* harmony export */   "SectionB": () => (/* binding */ SectionB),
-/* harmony export */   "sectionC": () => (/* binding */ sectionC)
+/* harmony export */   "SectionC": () => (/* binding */ SectionC)
 /* harmony export */ });
-/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(399);
+/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(401);
+/* harmony import */ var _states_sectionB__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(402);
+/* harmony import */ var _states_sectionC__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(403);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
  // the account part
 
@@ -14538,18 +14886,61 @@ var SectionA = /*#__PURE__*/function () {
   return SectionA;
 }();
 
-var SectionB = function SectionB() {
-  _classCallCheck(this, SectionB);
-};
+var SectionB = /*#__PURE__*/function () {
+  function SectionB() {
+    _classCallCheck(this, SectionB);
 
-var sectionC = function sectionC() {
-  _classCallCheck(this, sectionC);
-};
+    this.currentState = null;
+  }
+
+  _createClass(SectionB, [{
+    key: "init",
+    value: function init() {
+      this.change(new _states_sectionB__WEBPACK_IMPORTED_MODULE_1__.loggedOutState());
+    }
+  }, {
+    key: "change",
+    value: function change(state) {
+      this.currentState = state;
+    }
+  }]);
+
+  return SectionB;
+}();
+
+var SectionC = /*#__PURE__*/function () {
+  function SectionC() {
+    _classCallCheck(this, SectionC);
+
+    this.currentState = null;
+  }
+
+  _createClass(SectionC, [{
+    key: "default",
+    value: function _default() {
+      this.currentState = function () {
+        document.getElementById("section-c").innerHTML = null;
+      }();
+    }
+  }, {
+    key: "init",
+    value: function init() {
+      this.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_2__.loggedOutState());
+    }
+  }, {
+    key: "change",
+    value: function change(state) {
+      this.currentState = state;
+    }
+  }]);
+
+  return SectionC;
+}();
 
 
 
 /***/ }),
-/* 399 */
+/* 401 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14564,7 +14955,168 @@ var loggedOutState = function loggedOutState() {
 
 var loggedInState = function loggedInState(profile) {
   document.querySelector(".account-div").innerHTML = "\n   <div class=\"profile-account\">\n  <div class=\"login-div\">\n    <a href=\"#\" id=\"sign-out-btn\" class=\"account-btn p-1\"\n      >Sign Out <i class=\"fas fa-sign-out-alt\"></i\n    ></a>\n </div>\n </div>\n    ";
-  document.querySelector(".profile-account").style.background = "url(".concat(profile.photoURL, ") no-repeat center center/cover");
+  document.querySelector(".profile-account").style.background = "url(".concat(profile.profileImage, ") no-repeat center center/cover");
+};
+
+
+
+/***/ }),
+/* 402 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "loggedOutState": () => (/* binding */ loggedOutState),
+/* harmony export */   "spinnerState": () => (/* binding */ spinnerState),
+/* harmony export */   "userListState": () => (/* binding */ userListState)
+/* harmony export */ });
+var loggedOutState = function loggedOutState() {
+  document.getElementById("section-b").innerHTML = null;
+};
+
+var spinnerState = function spinnerState() {
+  document.getElementById("section-b").innerHTML = "\n    <div class=\"spinner-div\">\n      <div class=\"loader loader-b\">Loading...</div>\n    </div>\n      ";
+};
+
+var userListState = function userListState(userAnimeList) {
+  var listItemsDiv = document.createElement("div");
+  listItemsDiv.classList.add("saved-list-items");
+  userAnimeList.forEach(function (anime) {
+    var itemDiv = document.createElement("div");
+    itemDiv.classList.add("item", "mt-2", "p-2");
+    itemDiv.setAttribute("data-anime-id", anime.id);
+    itemDiv.innerHTML = "\n    <div class=\"item-photo\">\n      <i class=\"fas fa-tv fa-2x\"></i>\n    </div>\n  <div class=\"item-name\">\n      ".concat(anime.title, "\n    <span class=\"tooltip-text\"> Status : ").concat(anime.status, " </span>\n  </div>\n  ");
+    listItemsDiv.appendChild(itemDiv);
+  });
+  document.getElementById("section-b").innerHTML = null;
+  document.getElementById("section-b").appendChild(listItemsDiv);
+};
+
+
+
+/***/ }),
+/* 403 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "loggedOutState": () => (/* binding */ loggedOutState),
+/* harmony export */   "loggedInState": () => (/* binding */ loggedInState),
+/* harmony export */   "spinnerState": () => (/* binding */ spinnerState),
+/* harmony export */   "searchResultState": () => (/* binding */ searchResultState),
+/* harmony export */   "animeTitleState": () => (/* binding */ animeTitleState),
+/* harmony export */   "streamPlayerState": () => (/* binding */ streamPlayerState),
+/* harmony export */   "changedPlayerSourceState": () => (/* binding */ changedPlayerSourceState)
+/* harmony export */ });
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var loggedOutState = function loggedOutState() {
+  document.getElementById("section-c").innerHTML = "\n    <div class=\"dom-loaded-div\">\n        <h2 class=\"dom-loaded-text\">Please log in to fully  use the app.</h2>\n    </div>\n    ";
+};
+
+var loggedInState = function loggedInState(profile) {
+  document.getElementById("section-c").innerHTML = "\n  <div class=\"dom-loaded-div\">\n  <h2 class=\"dom-loaded-text\">Hi <strong>".concat(profile.userName, "</strong> you are logged in . Try it out! :)</h2>\n  </div>\n    ");
+};
+
+var spinnerState = function spinnerState() {
+  document.getElementById("section-c").innerHTML = "\n    <div class=\"spinner-div-c\">\n      <div class=\"loader loader-c\">Loading...</div>\n    </div>\n    ";
+};
+
+var searchResultState = function searchResultState(searchData) {
+  var searchResultsDiv = document.createElement("div");
+  searchResultsDiv.classList.add("search-results-div");
+  searchData.forEach(function (resultItem) {
+    var resultDiv = document.createElement("div");
+    resultDiv.classList.add("result-item", "anime-selection");
+    resultDiv.setAttribute("data-anime-id", "".concat(resultItem.animeid));
+    resultDiv.innerHTML = "\n        <img src=\"".concat(resultItem.image, "\" alt=\"\" />\n        <div class=\"text anime-selection\">\n        <div class=\"text-wrap\">\n            <p class=\"text-title anime-selection\">").concat(resultItem.title, "</p>\n        </div>\n        </div>\n        ");
+    searchResultsDiv.append(resultDiv);
+  });
+  document.getElementById("section-c").innerHTML = null;
+  document.getElementById("section-c").append(searchResultsDiv);
+};
+
+var animeTitleState = function animeTitleState(animeData, options) {
+  document.getElementById("section-c").innerHTML = "\n  <div class=\"anime-div\">\n   <div class=\"anime-info\">\n      <div class=\"anime-img\">\n         <img\n            src=\"".concat(animeData.image_url, "\"\n            alt=\"anime-img\"\n            />\n      </div>\n      <div class=\"anime-text-desc p-1 my-2\">\n         <h2>").concat(animeData.title, "</h2>\n         <div class=\"anime-details my-1\">\n            <h4><span id=\"anime-other\">").concat(animeData.other_names, "</span></h4>\n            <h4>Year : <span id=\"anime-year\">").concat(animeData.year, "</span></h4>\n            <h4>Status : <span id=\"anime-status\">").concat(animeData.status, "</span></h4>\n            <h4>Episodes : <span id=\"anime-episodes\">").concat(animeData.episodes, "</span></h4>\n            <h4>\n               Genre :\n               <span id=\"anime-genre\"\n                  >").concat(animeData.genre, "</span\n                  >\n            </h4>\n         </div>\n         <p id=\"anime-plot\">").concat(animeData.plot_summary, "</p>\n      </div>\n   </div>\n   <div class=\"my-1 p-3\" id=\"actions-div\">\n      <!-- <a href=\"#\" class=\"btn btn-firestore\">Add To List</a> --->\n      ").concat(function () {
+    if (options.inList) {
+      if (options.status === "watching") {
+        return "<a href=\"#\" class=\"btn btn-firestore-remove\">Remove From List</a>\n              <select id=\"status-selector\">\n                <option value=\"watching\" selected>Watching</option>\n                <option value=\"completed\">Completed</option>\n             </select>\n            ";
+      } else {
+        return "<a href=\"#\" class=\"btn btn-firestore-remove\">Remove From List</a>\n             <select id=\"status-selector\">\n              <option value=\"completed\" selected>Completed</option>\n                <option value=\"watching\">Watching</option>\n            </select>\n            ";
+      }
+    } else {
+      return "<a href=\"#\" class=\"btn btn-firestore\">Add To List</a>";
+    }
+  }(), "\n      <div id=\"episode-watcher\" data-anime-id=\"").concat(animeData.animeid, "\">\n         <input\n            type=\"text\"\n            id=\"episode-num-input\"\n            placeholder=\"enter episode num here\"\n            />\n         <a href=\"#\" class=\"watch-btn\">Watch</a>\n      </div>\n   </div>\n   </div>\n  ");
+};
+
+var streamPlayerState = function streamPlayerState(streamData) {
+  var playerDivExists = document.querySelector(".episode-player-div");
+
+  if (playerDivExists) {
+    document.querySelector(".episode-player-div").remove();
+  }
+
+  var episodePlayerDiv = document.createElement("div");
+  episodePlayerDiv.classList.add("episode-player-div", "p-1");
+  var iframePlayer = document.createElement("iframe");
+  iframePlayer.id = "player-iframe";
+  iframePlayer.setAttribute("allowfullscreen", "");
+  iframePlayer.setAttribute("frameborder", "0");
+
+  for (var key in streamData) {
+    if (streamData[key]) {
+      iframePlayer.src = streamData[key];
+      break;
+    }
+  }
+
+  episodePlayerDiv.appendChild(iframePlayer);
+  var streamSelectorDiv = document.createElement("div");
+  streamSelectorDiv.classList.add("stream-selector-div", "my-1", "p-1");
+  Object.entries(streamData).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        value = _ref2[1];
+
+    if (value) {
+      var streamBtn = document.createElement("a");
+      streamBtn.classList.add("btn", "btn-stream");
+      streamBtn.href = "stream-".concat(key);
+      streamBtn.setAttribute("data-video", value);
+      streamBtn.textContent = key;
+      streamSelectorDiv.appendChild(streamBtn);
+    }
+  });
+  episodePlayerDiv.appendChild(streamSelectorDiv);
+  document.querySelector(".anime-div").appendChild(episodePlayerDiv); // s-scroll to player
+
+  iframePlayer.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+};
+
+var changedPlayerSourceState = function changedPlayerSourceState(newSrc) {
+  var player = document.getElementById("player-iframe");
+  player.src = newSrc; // s-scroll to player
+
+  player.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 };
 
 
@@ -14660,7 +15212,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(395);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _db_firebase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(396);
-/* harmony import */ var _views_views__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(397);
+/* harmony import */ var _db_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(397);
+/* harmony import */ var _api_lazyreq__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(398);
+/* harmony import */ var _views_views__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(399);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -14670,73 +15230,401 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-var views = new _views_views__WEBPACK_IMPORTED_MODULE_3__.default();
-document.querySelector(".account-div").addEventListener("click", /*#__PURE__*/function () {
+
+
+var views = new _views_views__WEBPACK_IMPORTED_MODULE_5__.default();
+var api = new _api_lazyreq__WEBPACK_IMPORTED_MODULE_4__.default();
+var model = new _db_model__WEBPACK_IMPORTED_MODULE_3__.LocalStorage(); //account login/logout
+
+views.accountComponent.addEventListener("click", /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    var profile, result;
+    var profile, _profile, userName, profileImage, userEmail, userList, result;
+
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            if (!(e.target.id === "sign-in-btn")) {
-              _context.next = 13;
-              break;
-            }
-
-            _context.prev = 1;
-            _context.next = 4;
-            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignIn();
-
-          case 4:
-            profile = _context.sent;
-            console.log("\n      name : ".concat(profile.displayName, "\n      email : ").concat(profile.email, "\n      profileImg : ").concat(profile.photoURL, " \n      "));
-            views.accountlogInState(profile);
-            _context.next = 12;
-            break;
-
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](1);
-            console.log(_context.t0);
-
-          case 12:
             e.preventDefault();
 
-          case 13:
-            if (!(e.target.id === "sign-out-btn")) {
-              _context.next = 26;
+            if (!(e.target.id === "sign-in-btn")) {
+              _context.next = 27;
               break;
             }
 
-            _context.prev = 14;
-            _context.next = 17;
-            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignOut();
+            _context.prev = 2;
+            _context.next = 5;
+            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignIn();
 
-          case 17:
-            result = _context.sent;
-            console.log(result);
-            _context.next = 24;
+          case 5:
+            profile = _context.sent;
+            _profile = profile, userName = _profile.displayName, profileImage = _profile.photoURL, userEmail = _profile.email;
+            profile = {
+              userName: userName,
+              profileImage: profileImage,
+              userEmail: userEmail
+            };
+            model.init(profile);
+            views.accountlogInState(profile);
+            views.showAlert("success", "You are Successfully logged in");
+            views.renderSpinner("section-b"); //firebase user's list
+
+            _context.next = 14;
+            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.getUserList(userEmail);
+
+          case 14:
+            userList = _context.sent;
+
+            if (userList.exists) {
+              _context.next = 21;
+              break;
+            }
+
+            _context.next = 18;
+            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.setUserList(userEmail, {
+              list: null
+            });
+
+          case 18:
+            views.sectionB.init();
+            _context.next = 22;
             break;
 
           case 21:
-            _context.prev = 21;
-            _context.t1 = _context["catch"](14);
-            console.log(_context.t1);
+            views.renderUserAnimeList(userList.list);
+
+          case 22:
+            _context.next = 27;
+            break;
 
           case 24:
-            views.componentA.init();
-            e.preventDefault();
+            _context.prev = 24;
+            _context.t0 = _context["catch"](2);
+            views.showAlert("danger", _context.t0);
 
-          case 26:
+          case 27:
+            if (!(e.target.id === "sign-out-btn")) {
+              _context.next = 42;
+              break;
+            }
+
+            _context.prev = 28;
+            _context.next = 31;
+            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignOut();
+
+          case 31:
+            result = _context.sent;
+            localStorage.clear();
+            views.sectionB.init();
+            views.sectionC.init();
+            views.showAlert("success", result);
+            _context.next = 41;
+            break;
+
+          case 38:
+            _context.prev = 38;
+            _context.t1 = _context["catch"](28);
+            console.log(_context.t1);
+
+          case 41:
+            views.sectionA.init();
+
+          case 42:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 9], [14, 21]]);
+    }, _callee, null, [[2, 24], [28, 38]]);
   }));
 
   return function (_x) {
     return _ref.apply(this, arguments);
+  };
+}()); // search
+
+views.searchInput.addEventListener("keyup", /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+    var query, data;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            if (!(e.key === "Enter")) {
+              _context2.next = 19;
+              break;
+            }
+
+            if (!(e.target.value.trim() === "")) {
+              _context2.next = 5;
+              break;
+            }
+
+            views.showAlert("danger", "please enter something :/");
+            _context2.next = 19;
+            break;
+
+          case 5:
+            _context2.prev = 5;
+            query = e.target.value;
+            views.searchInput.value = null;
+            views.renderSpinner("section-c");
+            _context2.next = 11;
+            return api.get("https://powerful-beach-14543.herokuapp.com/search/".concat(query));
+
+          case 11:
+            data = _context2.sent;
+
+            if (data.length === 0) {
+              views.showAlert("danger", "ApiError : Nothing Found : ( ");
+              views.sectionC["default"]();
+            } else {
+              views.searchResultsState(data);
+            }
+
+            _context2.next = 19;
+            break;
+
+          case 15:
+            _context2.prev = 15;
+            _context2.t0 = _context2["catch"](5);
+            console.log(_context2.t0);
+            views.showAlert("danger", _context2.t0);
+
+          case 19:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[5, 15]]);
+  }));
+
+  return function (_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}());
+views.searchBtn.addEventListener("click", /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+    var query, data;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            if (!(views.searchInput.value.trim() === "")) {
+              _context3.next = 4;
+              break;
+            }
+
+            views.showAlert("danger", "please enter something :/");
+            _context3.next = 18;
+            break;
+
+          case 4:
+            _context3.prev = 4;
+            query = views.searchInput.value;
+            views.clearFields();
+            views.renderSpinner("section-c");
+            _context3.next = 10;
+            return api.get("https://powerful-beach-14543.herokuapp.com/search/".concat(query));
+
+          case 10:
+            data = _context3.sent;
+
+            if (data.length === 0) {
+              views.showAlert("danger", "ApiError : Nothing Found : ( ");
+              views.sectionC["default"]();
+            } else {
+              views.searchResultsState(data);
+            }
+
+            _context3.next = 18;
+            break;
+
+          case 14:
+            _context3.prev = 14;
+            _context3.t0 = _context3["catch"](4);
+            console.log(_context3.t0);
+            views.showAlert("danger", _context3.t0);
+
+          case 18:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[4, 14]]);
+  }));
+
+  return function (_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}());
+views.mainUI.addEventListener("click", /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+    var renderAnimeTitle, _renderAnimeTitle, animeid, _animeid, _animeid2, episodeNumber, _animeid3, data, _data$vidcdn, gogocdn, _data$streamsb, streamsb, _data$streamtape, streamtape, _data$doodstream, doodstream, _data$server, hydrax, _data$mixdrop, mixdrop, _data$streamhd, streamhd, streamObj, newSrc;
+
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _renderAnimeTitle = function _renderAnimeTitle3() {
+              _renderAnimeTitle = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(animeid) {
+                var apiData, animeData, userList;
+                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                  while (1) {
+                    switch (_context4.prev = _context4.next) {
+                      case 0:
+                        views.renderSpinner("section-c");
+                        _context4.next = 3;
+                        return api.get("https://powerful-beach-14543.herokuapp.com/getdetails/".concat(animeid));
+
+                      case 3:
+                        apiData = _context4.sent;
+                        animeData = _objectSpread(_objectSpread({}, apiData), {}, {
+                          animeid: animeid
+                        });
+
+                        if (!localStorage.getItem("local")) {
+                          //logged out state
+                          views.renderAnimeTitle(animeData);
+                        } else {
+                          userList = model.get().data.list.find(function (anime) {
+                            return anime.id === animeid;
+                          });
+
+                          if (!userList) {
+                            console.log("not in user list");
+                            views.renderAnimeTitle(animeData);
+                          } else {
+                            console.log(" in user list \uD83D\uDE0E"); //extra param to render changed actions div
+
+                            views.renderAnimeTitle(animeData, {
+                              inList: true,
+                              status: "".concat(userList.status)
+                            });
+                          }
+                        } //TODO : fix error on logged out state
+                        // views.sectionC.default();
+
+
+                      case 6:
+                      case "end":
+                        return _context4.stop();
+                    }
+                  }
+                }, _callee4);
+              }));
+              return _renderAnimeTitle.apply(this, arguments);
+            };
+
+            renderAnimeTitle = function _renderAnimeTitle2(_x5) {
+              return _renderAnimeTitle.apply(this, arguments);
+            };
+
+            e.preventDefault();
+
+            if (!e.target.classList.contains("anime-selection")) {
+              _context5.next = 21;
+              break;
+            }
+
+            e.preventDefault();
+
+            if (!e.target.hasAttribute("data-anime-id")) {
+              _context5.next = 11;
+              break;
+            }
+
+            animeid = e.target.getAttribute("data-anime-id");
+            _context5.next = 9;
+            return renderAnimeTitle(animeid);
+
+          case 9:
+            _context5.next = 21;
+            break;
+
+          case 11:
+            if (!e.target.parentElement.hasAttribute("data-anime-id")) {
+              _context5.next = 17;
+              break;
+            }
+
+            _animeid = e.target.parentElement.getAttribute("data-anime-id");
+            _context5.next = 15;
+            return renderAnimeTitle(_animeid);
+
+          case 15:
+            _context5.next = 21;
+            break;
+
+          case 17:
+            if (!e.target.parentElement.parentElement.parentElement.hasAttribute("data-anime-id")) {
+              _context5.next = 21;
+              break;
+            }
+
+            _animeid2 = e.target.parentElement.parentElement.parentElement.getAttribute("data-anime-id"); // checkIfinUserList(animeid);
+
+            _context5.next = 21;
+            return renderAnimeTitle(_animeid2);
+
+          case 21:
+            if (!(e.target.className === "watch-btn")) {
+              _context5.next = 34;
+              break;
+            }
+
+            episodeNumber = views.getEpNumber().trim();
+
+            if (!(episodeNumber === "")) {
+              _context5.next = 28;
+              break;
+            }
+
+            views.clearFields();
+            views.showAlert("danger", "please enter something :/");
+            _context5.next = 34;
+            break;
+
+          case 28:
+            views.clearFields();
+            _animeid3 = e.target.parentElement.getAttribute("data-anime-id");
+            _context5.next = 32;
+            return api.get("https://powerful-beach-14543.herokuapp.com/stream/".concat(_animeid3, "/ep/").concat(episodeNumber));
+
+          case 32:
+            data = _context5.sent;
+
+            if (data.episode_exists === "true") {
+              _data$vidcdn = data.vidcdn, gogocdn = _data$vidcdn === void 0 ? null : _data$vidcdn, _data$streamsb = data.streamsb, streamsb = _data$streamsb === void 0 ? null : _data$streamsb, _data$streamtape = data.streamtape, streamtape = _data$streamtape === void 0 ? null : _data$streamtape, _data$doodstream = data.doodstream, doodstream = _data$doodstream === void 0 ? null : _data$doodstream, _data$server = data.server, hydrax = _data$server === void 0 ? null : _data$server, _data$mixdrop = data.mixdrop, mixdrop = _data$mixdrop === void 0 ? null : _data$mixdrop, _data$streamhd = data.streamhd, streamhd = _data$streamhd === void 0 ? null : _data$streamhd;
+              streamObj = {
+                streamtape: streamtape,
+                doodstream: doodstream,
+                mixdrop: mixdrop,
+                streamsb: streamsb,
+                hydrax: hydrax,
+                streamhd: streamhd,
+                vidcdn: gogocdn
+              };
+              views.renderStreamPlayer(streamObj);
+              views.showAlert("success", "Episode found ! :)");
+            } else {
+              views.showAlert("danger", "Episode either doesn't exist or not found :-(");
+            }
+
+          case 34:
+            if (e.target.classList.contains("btn-stream")) {
+              newSrc = e.target.getAttribute("data-video");
+              views.renderChangedEpisodePlayer(newSrc);
+            }
+
+          case 35:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+
+  return function (_x4) {
+    return _ref4.apply(this, arguments);
   };
 }());
 })();

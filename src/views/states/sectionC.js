@@ -8,7 +8,7 @@ const loggedOutState = function () {
 const loggedInState = function (profile) {
   document.getElementById("section-c").innerHTML = `
   <div class="dom-loaded-div">
-  <h2 class="dom-loaded-text">Hi <strong>${profile.displayName}</strong> you are logged in . Try it out! :)</h2>
+  <h2 class="dom-loaded-text">Hi <strong>${profile.userName}</strong> you are logged in . Try it out! :)</h2>
   </div>
     `;
 };
@@ -42,7 +42,7 @@ const searchResultState = function (searchData) {
   document.getElementById("section-c").append(searchResultsDiv);
 };
 
-const animeTitleState = function (animeData, id) {
+const animeTitleState = function (animeData, options) {
   document.getElementById("section-c").innerHTML = `
   <div class="anime-div">
    <div class="anime-info">
@@ -58,7 +58,9 @@ const animeTitleState = function (animeData, id) {
             <h4><span id="anime-other">${animeData.other_names}</span></h4>
             <h4>Year : <span id="anime-year">${animeData.year}</span></h4>
             <h4>Status : <span id="anime-status">${animeData.status}</span></h4>
-            <h4>Episodes : <span id="anime-episodes">${animeData.episodes}</span></h4>
+            <h4>Episodes : <span id="anime-episodes">${
+              animeData.episodes
+            }</span></h4>
             <h4>
                Genre :
                <span id="anime-genre"
@@ -70,7 +72,28 @@ const animeTitleState = function (animeData, id) {
       </div>
    </div>
    <div class="my-1 p-3" id="actions-div">
-      <a href="#" class="btn btn-firestore">Add To List</a>
+      <!-- <a href="#" class="btn btn-firestore">Add To List</a> --->
+      ${(() => {
+        if (options.inList) {
+          if (options.status === "watching") {
+            return `<a href="#" class="btn btn-firestore-remove">Remove From List</a>
+              <select id="status-selector">
+                <option value="watching" selected>Watching</option>
+                <option value="completed">Completed</option>
+             </select>
+            `;
+          } else {
+            return `<a href="#" class="btn btn-firestore-remove">Remove From List</a>
+             <select id="status-selector">
+              <option value="completed" selected>Completed</option>
+                <option value="watching">Watching</option>
+            </select>
+            `;
+          }
+        } else {
+          return `<a href="#" class="btn btn-firestore">Add To List</a>`;
+        }
+      })()}
       <div id="episode-watcher" data-anime-id="${animeData.animeid}">
          <input
             type="text"

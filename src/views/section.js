@@ -22,11 +22,6 @@ class SectionB {
     this.currentState = null;
   }
 
-  default () {
-    this.currentState = (()=> {document.getElementById('section-b').innerHTML=null})();
-  }
-
-
   init() {
     this.change(new statesB.loggedOutState());
   }
@@ -42,7 +37,9 @@ class SectionC {
   }
 
   default() {
-    this.currentState = (() => {document.getElementById('section-c').innerHTML=null})();
+    this.currentState = (() => {
+      document.getElementById("section-c").innerHTML = null;
+    })();
   }
 
   init() {

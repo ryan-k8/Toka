@@ -3,35 +3,68 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import FirebaseHelper from "./db/firebase";
-import lazyReq from "./db/lazyreq";
+import { LocalStorage } from "./db/model";
+import lazyReq from "./api/lazyreq";
 import Views from "./views/views";
 
 const views = new Views();
 const api = new lazyReq();
+const model = new LocalStorage();
 //account login/logout
 
 views.accountComponent.addEventListener("click", async (e) => {
+  e.preventDefault();
   if (e.target.id === "sign-in-btn") {
     try {
-      const profile = await FirebaseHelper.authSignIn();
+      let profile = await FirebaseHelper.authSignIn();
+
+      const {
+        displayName: userName,
+        photoURL: profileImage,
+        email: userEmail,
+      } = profile;
+
+      profile = {
+        userName: userName,
+        profileImage: profileImage,
+        userEmail: userEmail,
+      };
+
+      model.init(profile);
 
       views.accountlogInState(profile);
+
       views.showAlert("success", "You are Successfully logged in");
+
+      views.renderSpinner("section-b");
+
+      //firebase user's list
+      const userList = await FirebaseHelper.getUserList(userEmail);
+      if (!userList.exists) {
+        await FirebaseHelper.setUserList(userEmail, {
+          list: null,
+        });
+        views.sectionB.init();
+      } else {
+        views.renderUserAnimeList(userList.list);
+      }
     } catch (err) {
-      console.log(err);
+      views.showAlert("danger", err);
     }
-    e.preventDefault();
   }
   if (e.target.id === "sign-out-btn") {
     try {
       const result = await FirebaseHelper.authSignOut();
-      views.componentC.init();
-      console.log(result);
+
+      localStorage.clear();
+      views.sectionB.init();
+      views.sectionC.init();
+
+      views.showAlert("success", result);
     } catch (error) {
       console.log(error);
     }
-    views.componentA.init();
-    e.preventDefault();
+    views.sectionA.init();
   }
 });
 
@@ -46,13 +79,13 @@ views.searchInput.addEventListener("keyup", async (e) => {
 
         views.searchInput.value = null;
 
-        views.spinnerState("section-c");
+        views.renderSpinner("section-c");
         const data = await api.get(
           `https://powerful-beach-14543.herokuapp.com/search/${query}`
         );
         if (data.length === 0) {
           views.showAlert("danger", "ApiError : Nothing Found : ( ");
-          views.componentC.default();
+          views.sectionC.default();
         } else {
           views.searchResultsState(data);
         }
@@ -69,15 +102,15 @@ views.searchBtn.addEventListener("click", async (e) => {
   } else {
     try {
       const query = views.searchInput.value;
-      views.searchInput.value = null;
+      views.clearFields();
 
-      views.spinnerState("section-c");
+      views.renderSpinner("section-c");
       const data = await api.get(
         `https://powerful-beach-14543.herokuapp.com/search/${query}`
       );
       if (data.length === 0) {
         views.showAlert("danger", "ApiError : Nothing Found : ( ");
-        views.componentC.default();
+        views.sectionC.default();
       } else {
         views.searchResultsState(data);
       }
@@ -90,17 +123,37 @@ views.searchBtn.addEventListener("click", async (e) => {
 
 views.mainUI.addEventListener("click", async (e) => {
   e.preventDefault();
+
   async function renderAnimeTitle(animeid) {
-    views.spinnerState("section-c");
+    views.renderSpinner("section-c");
+
     let apiData = await api.get(
       `https://powerful-beach-14543.herokuapp.com/getdetails/${animeid}`
     );
 
     const animeData = { ...apiData, animeid: animeid };
+    if (!localStorage.getItem("local")) {
+      //logged out state
+      views.renderAnimeTitle(animeData);
+    } else {
+      const userList = model
+        .get()
+        .data.list.find((anime) => anime.id === animeid);
 
-    views.renderAnimeTitle(animeData);
+      if (!userList) {
+        views.renderAnimeTitle(animeData);
+      } else {
+        //extra param to render changed actions div
+        views.renderAnimeTitle(animeData, {
+          inList: true,
+          status: `${userList.status}`,
+        });
+      }
+    }
 
-    // views.componentC.default();
+    //TODO : fix error on logged out state
+
+    // views.sectionC.default();
   }
 
   if (e.target.classList.contains("anime-selection")) {
@@ -122,45 +175,53 @@ views.mainUI.addEventListener("click", async (e) => {
           "data-anime-id"
         );
 
+      // checkIfinUserList(animeid);
+
       await renderAnimeTitle(animeid);
     }
   }
   if (e.target.className === "watch-btn") {
-    const episodeNumber = document.getElementById("episode-num-input").value;
-    const animeid = e.target.parentElement.getAttribute("data-anime-id");
-
-    const data = await api.get(
-      `https://powerful-beach-14543.herokuapp.com/stream/${animeid}/ep/${episodeNumber}`
-    );
-    if (data.episode_exists === "true") {
-      const {
-        vidcdn: gogocdn = null,
-        streamsb: streamsb = null,
-        streamtape: streamtape = null,
-        doodstream: doodstream = null,
-        server: hydrax = null,
-        mixdrop: mixdrop = null,
-        streamhd: streamhd = null,
-      } = data;
-
-      const streamObj = {
-        streamtape: streamtape,
-        doodstream: doodstream,
-        mixdrop: mixdrop,
-        streamsb: streamsb,
-        hydrax: hydrax,
-        streamhd: streamhd,
-        vidcdn: gogocdn,
-      };
-
-      views.renderStreamPlayer(streamObj);
-
-      views.showAlert("success", "Episode found ! :)");
+    const episodeNumber = views.getEpNumber().trim();
+    if (episodeNumber === "") {
+      views.clearFields();
+      views.showAlert("danger", "please enter something :/");
     } else {
-      views.showAlert(
-        "danger",
-        "Episode either doesn't exist or not found :-("
+      views.clearFields();
+      const animeid = e.target.parentElement.getAttribute("data-anime-id");
+
+      const data = await api.get(
+        `https://powerful-beach-14543.herokuapp.com/stream/${animeid}/ep/${episodeNumber}`
       );
+      if (data.episode_exists === "true") {
+        const {
+          vidcdn: gogocdn = null,
+          streamsb: streamsb = null,
+          streamtape: streamtape = null,
+          doodstream: doodstream = null,
+          server: hydrax = null,
+          mixdrop: mixdrop = null,
+          streamhd: streamhd = null,
+        } = data;
+
+        const streamObj = {
+          streamtape: streamtape,
+          doodstream: doodstream,
+          mixdrop: mixdrop,
+          streamsb: streamsb,
+          hydrax: hydrax,
+          streamhd: streamhd,
+          vidcdn: gogocdn,
+        };
+
+        views.renderStreamPlayer(streamObj);
+
+        views.showAlert("success", "Episode found ! :)");
+      } else {
+        views.showAlert(
+          "danger",
+          "Episode either doesn't exist or not found :-("
+        );
+      }
     }
   }
   if (e.target.classList.contains("btn-stream")) {
