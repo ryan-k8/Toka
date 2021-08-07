@@ -5,6 +5,7 @@ import * as statesC from "./states/sectionC";
 
 class Views {
   constructor() {
+    // three below are only for changing states
     this.sectionA = new SectionA(); //account
     this.sectionB = new SectionB(); // section-b (firebase lists)
     this.sectionC = new SectionC(); // section-c (main ui)
@@ -18,7 +19,7 @@ class Views {
 
     //setting up initial states
     this.sectionA.init();
-    // this.sectionB.init();
+    this.sectionB.init();
     this.sectionC.init();
   }
 

@@ -222,7 +222,7 @@ body {
 #section-b {
   grid-area: section-b;
   height: 450px;
-  max-width: 280px;
+  width: 250px;
   border-right: 1.9px solid #e9e9e9;
   overflow-x: hidden;
   overflow-y: auto; }

@@ -109,7 +109,7 @@ views.searchBtn.addEventListener("click", async (e) => {
         `https://powerful-beach-14543.herokuapp.com/search/${query}`
       );
       if (data.length === 0) {
-        views.showAlert("danger", "ApiError : Nothing Found : ( ");
+        views.showAlert("danger", "ApiError : Nothing Found :( ");
         views.sectionC.default();
       } else {
         views.searchResultsState(data);
@@ -150,9 +150,6 @@ views.mainUI.addEventListener("click", async (e) => {
         });
       }
     }
-
-    //TODO : fix error on logged out state
-
     // views.sectionC.default();
   }
 
@@ -228,5 +225,89 @@ views.mainUI.addEventListener("click", async (e) => {
     const newSrc = e.target.getAttribute("data-video");
 
     views.renderChangedEpisodePlayer(newSrc);
+  }
+
+  if (e.target.classList.contains("btn-firestore")) {
+    const { id, title } = JSON.parse(e.target.getAttribute("data-anime"));
+
+    try {
+      views.renderSpinner("section-b");
+
+      await model.add(id, title);
+
+      views.showAlert("info", "Anime Added !");
+      views.renderUserAnimeList(model.get().data.list);
+    } catch (err) {
+      views.showAlert("danger", "Error : can't add to list when not logged in");
+    }
+  }
+
+  if (e.target.classList.contains("btn-firestore-remove")) {
+    const animeid =
+      e.target.nextElementSibling.nextElementSibling.getAttribute(
+        "data-anime-id"
+      );
+
+    views.renderSpinner("section-b");
+
+    await model.remove(animeid);
+
+    views.showAlert("info", "Anime removed ! ");
+    views.renderUserAnimeList(model.get().data.list);
+  }
+});
+
+views.mainUI.addEventListener("change", async (e) => {
+  if (e.target.id === "status-selector") {
+    const animeid = e.target.nextElementSibling.getAttribute("data-anime-id");
+    const status = e.target.value;
+
+    console.log(animeid, " ", status);
+
+    views.renderSpinner("section-b");
+    try {
+      await model.changeStatus(animeid, status);
+      views.showAlert("info", "Changed anime status !");
+      views.renderUserAnimeList(model.get().data.list);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+});
+
+views.userList.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  if (
+    e.target.classList.contains("item") ||
+    e.target.classList.contains("item-name")
+  ) {
+    const animeid = e.target.getAttribute("data-anime-id");
+
+    views.renderSpinner("section-c");
+
+    let apiData = await api.get(
+      `https://powerful-beach-14543.herokuapp.com/getdetails/${animeid}`
+    );
+
+    const animeData = { ...apiData, animeid: animeid };
+    if (!localStorage.getItem("local")) {
+      //logged out state
+      views.renderAnimeTitle(animeData);
+    } else {
+      const userList = model
+        .get()
+        .data.list.find((anime) => anime.id === animeid);
+
+      if (!userList) {
+        views.renderAnimeTitle(animeData);
+      } else {
+        //extra param to render changed actions div
+        views.renderAnimeTitle(animeData, {
+          inList: true,
+          status: `${userList.status}`,
+        });
+      }
+    }
   }
 });

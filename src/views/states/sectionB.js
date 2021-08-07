@@ -23,7 +23,7 @@ const userListState = function (userAnimeList) {
     <div class="item-photo">
       <i class="fas fa-tv fa-2x"></i>
     </div>
-  <div class="item-name">
+  <div class="item-name" data-anime-id="${anime.id}">
       ${anime.title}
     <span class="tooltip-text"> Status : ${anime.status} </span>
   </div>

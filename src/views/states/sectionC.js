@@ -72,26 +72,34 @@ const animeTitleState = function (animeData, options) {
       </div>
    </div>
    <div class="my-1 p-3" id="actions-div">
-      <!-- <a href="#" class="btn btn-firestore">Add To List</a> --->
       ${(() => {
         if (options.inList) {
           if (options.status === "watching") {
-            return `<a href="#" class="btn btn-firestore-remove">Remove From List</a>
+            return `<a href="#" class="btn btn-firestore-remove" data-anime-id="${animeData.animeid}">Remove From List</a>
               <select id="status-selector">
                 <option value="watching" selected>Watching</option>
                 <option value="completed">Completed</option>
              </select>
             `;
-          } else {
+          } else if (options.status === "completed") {
             return `<a href="#" class="btn btn-firestore-remove">Remove From List</a>
              <select id="status-selector">
               <option value="completed" selected>Completed</option>
                 <option value="watching">Watching</option>
             </select>
             `;
+          } else if (options.status === "none") {
+            return `
+            <a href="#" class="btn btn-firestore-remove">Remove From List</a>
+             <select id="status-selector">
+             <option selected disabled hidden>Select Status</option>
+             <option value="watching">Watching</option>
+              <option value="completed">Completed</option>
+            </select>
+            `;
           }
         } else {
-          return `<a href="#" class="btn btn-firestore">Add To List</a>`;
+          return `<a href="#" class="btn btn-firestore" data-anime='{"id":"${animeData.animeid}","title":"${animeData.title}"}'>Add To List</a>`;
         }
       })()}
       <div id="episode-watcher" data-anime-id="${animeData.animeid}">

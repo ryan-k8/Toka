@@ -14505,6 +14505,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "LocalStorage": () => (/* binding */ LocalStorage)
 /* harmony export */ });
 /* harmony import */ var _firebase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(396);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -14515,7 +14527,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-//local storage
+//local storage for current user management
 
 
 var LocalStorage = /*#__PURE__*/function () {
@@ -14543,35 +14555,34 @@ var LocalStorage = /*#__PURE__*/function () {
     key: "update",
     value: function () {
       var _update = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var data, updatedData, Db;
+        var updatedData, Db;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                data = this.get();
-                _context.prev = 1;
-                _context.next = 4;
-                return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.getUserList(data.credentials.userEmail);
+                _context.prev = 0;
+                _context.next = 3;
+                return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.getUserList(this.get().credentials.userEmail);
 
-              case 4:
+              case 3:
                 updatedData = _context.sent;
                 Db = this.get();
                 Db.data = updatedData;
                 localStorage.setItem("local", JSON.stringify(Db));
-                _context.next = 13;
+                _context.next = 12;
                 break;
 
-              case 10:
-                _context.prev = 10;
-                _context.t0 = _context["catch"](1);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
 
-              case 13:
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 10]]);
+        }, _callee, this, [[0, 9]]);
       }));
 
       function update() {
@@ -14579,6 +14590,125 @@ var LocalStorage = /*#__PURE__*/function () {
       }
 
       return update;
+    }()
+  }, {
+    key: "add",
+    value: function () {
+      var _add = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(animeid, title) {
+        var _this$get, userEmail, userList, newUserList;
+
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this$get = this.get(), userEmail = _this$get.credentials.userEmail, userList = _this$get.data.list;
+                newUserList = {
+                  list: [].concat(_toConsumableArray(userList), [{
+                    id: animeid,
+                    title: title,
+                    status: "none"
+                  }])
+                };
+                _context2.next = 4;
+                return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.setUserList(userEmail, newUserList);
+
+              case 4:
+                _context2.next = 6;
+                return this.update();
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function add(_x, _x2) {
+        return _add.apply(this, arguments);
+      }
+
+      return add;
+    }()
+  }, {
+    key: "remove",
+    value: function () {
+      var _remove = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(animeid) {
+        var newUserList, _this$get2, userEmail;
+
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                newUserList = {
+                  list: this.get().data.list.filter(function (anime) {
+                    return anime.id !== animeid;
+                  })
+                };
+                _this$get2 = this.get(), userEmail = _this$get2.credentials.userEmail;
+                _context3.next = 4;
+                return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.setUserList(userEmail, newUserList);
+
+              case 4:
+                _context3.next = 6;
+                return this.update();
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function remove(_x3) {
+        return _remove.apply(this, arguments);
+      }
+
+      return remove;
+    }()
+  }, {
+    key: "changeStatus",
+    value: function () {
+      var _changeStatus = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(animeid, status) {
+        var _this$get3, userEmail, userList, newUserList;
+
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _this$get3 = this.get(), userEmail = _this$get3.credentials.userEmail, userList = _this$get3.data.list;
+                newUserList = {
+                  list: userList.map(function (anime) {
+                    if (anime.id === animeid) {
+                      return {
+                        id: anime.id,
+                        title: anime.title,
+                        status: status
+                      };
+                    }
+                  })
+                };
+                _context4.next = 4;
+                return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.setUserList(userEmail, newUserList);
+
+              case 4:
+                _context4.next = 6;
+                return this.update();
+
+              case 6:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function changeStatus(_x4, _x5) {
+        return _changeStatus.apply(this, arguments);
+      }
+
+      return changeStatus;
     }()
   }, {
     key: "clear",
@@ -14749,6 +14879,7 @@ var Views = /*#__PURE__*/function () {
   function Views() {
     _classCallCheck(this, Views);
 
+    // three below are only for changing states
     this.sectionA = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionA(); //account
 
     this.sectionB = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionB(); // section-b (firebase lists)
@@ -14759,10 +14890,10 @@ var Views = /*#__PURE__*/function () {
     this.searchBtn = document.querySelector(".search-btn");
     this.accountComponent = document.querySelector(".account-div");
     this.mainUI = document.getElementById("section-c");
-    this.savedList = document.getElementById("section-b"); //setting up initial states
+    this.userList = document.getElementById("section-b"); //setting up initial states
 
-    this.sectionA.init(); // this.sectionB.init();
-
+    this.sectionA.init();
+    this.sectionB.init();
     this.sectionC.init();
   }
 
@@ -14986,7 +15117,7 @@ var userListState = function userListState(userAnimeList) {
     var itemDiv = document.createElement("div");
     itemDiv.classList.add("item", "mt-2", "p-2");
     itemDiv.setAttribute("data-anime-id", anime.id);
-    itemDiv.innerHTML = "\n    <div class=\"item-photo\">\n      <i class=\"fas fa-tv fa-2x\"></i>\n    </div>\n  <div class=\"item-name\">\n      ".concat(anime.title, "\n    <span class=\"tooltip-text\"> Status : ").concat(anime.status, " </span>\n  </div>\n  ");
+    itemDiv.innerHTML = "\n    <div class=\"item-photo\">\n      <i class=\"fas fa-tv fa-2x\"></i>\n    </div>\n  <div class=\"item-name\" data-anime-id=\"".concat(anime.id, "\">\n      ").concat(anime.title, "\n    <span class=\"tooltip-text\"> Status : ").concat(anime.status, " </span>\n  </div>\n  ");
     listItemsDiv.appendChild(itemDiv);
   });
   document.getElementById("section-b").innerHTML = null;
@@ -15049,15 +15180,17 @@ var searchResultState = function searchResultState(searchData) {
 };
 
 var animeTitleState = function animeTitleState(animeData, options) {
-  document.getElementById("section-c").innerHTML = "\n  <div class=\"anime-div\">\n   <div class=\"anime-info\">\n      <div class=\"anime-img\">\n         <img\n            src=\"".concat(animeData.image_url, "\"\n            alt=\"anime-img\"\n            />\n      </div>\n      <div class=\"anime-text-desc p-1 my-2\">\n         <h2>").concat(animeData.title, "</h2>\n         <div class=\"anime-details my-1\">\n            <h4><span id=\"anime-other\">").concat(animeData.other_names, "</span></h4>\n            <h4>Year : <span id=\"anime-year\">").concat(animeData.year, "</span></h4>\n            <h4>Status : <span id=\"anime-status\">").concat(animeData.status, "</span></h4>\n            <h4>Episodes : <span id=\"anime-episodes\">").concat(animeData.episodes, "</span></h4>\n            <h4>\n               Genre :\n               <span id=\"anime-genre\"\n                  >").concat(animeData.genre, "</span\n                  >\n            </h4>\n         </div>\n         <p id=\"anime-plot\">").concat(animeData.plot_summary, "</p>\n      </div>\n   </div>\n   <div class=\"my-1 p-3\" id=\"actions-div\">\n      <!-- <a href=\"#\" class=\"btn btn-firestore\">Add To List</a> --->\n      ").concat(function () {
+  document.getElementById("section-c").innerHTML = "\n  <div class=\"anime-div\">\n   <div class=\"anime-info\">\n      <div class=\"anime-img\">\n         <img\n            src=\"".concat(animeData.image_url, "\"\n            alt=\"anime-img\"\n            />\n      </div>\n      <div class=\"anime-text-desc p-1 my-2\">\n         <h2>").concat(animeData.title, "</h2>\n         <div class=\"anime-details my-1\">\n            <h4><span id=\"anime-other\">").concat(animeData.other_names, "</span></h4>\n            <h4>Year : <span id=\"anime-year\">").concat(animeData.year, "</span></h4>\n            <h4>Status : <span id=\"anime-status\">").concat(animeData.status, "</span></h4>\n            <h4>Episodes : <span id=\"anime-episodes\">").concat(animeData.episodes, "</span></h4>\n            <h4>\n               Genre :\n               <span id=\"anime-genre\"\n                  >").concat(animeData.genre, "</span\n                  >\n            </h4>\n         </div>\n         <p id=\"anime-plot\">").concat(animeData.plot_summary, "</p>\n      </div>\n   </div>\n   <div class=\"my-1 p-3\" id=\"actions-div\">\n      ").concat(function () {
     if (options.inList) {
       if (options.status === "watching") {
-        return "<a href=\"#\" class=\"btn btn-firestore-remove\">Remove From List</a>\n              <select id=\"status-selector\">\n                <option value=\"watching\" selected>Watching</option>\n                <option value=\"completed\">Completed</option>\n             </select>\n            ";
-      } else {
+        return "<a href=\"#\" class=\"btn btn-firestore-remove\" data-anime-id=\"".concat(animeData.animeid, "\">Remove From List</a>\n              <select id=\"status-selector\">\n                <option value=\"watching\" selected>Watching</option>\n                <option value=\"completed\">Completed</option>\n             </select>\n            ");
+      } else if (options.status === "completed") {
         return "<a href=\"#\" class=\"btn btn-firestore-remove\">Remove From List</a>\n             <select id=\"status-selector\">\n              <option value=\"completed\" selected>Completed</option>\n                <option value=\"watching\">Watching</option>\n            </select>\n            ";
+      } else if (options.status === "none") {
+        return "\n            <a href=\"#\" class=\"btn btn-firestore-remove\">Remove From List</a>\n             <select id=\"status-selector\">\n             <option selected disabled hidden>Select Status</option>\n             <option value=\"watching\">Watching</option>\n              <option value=\"completed\">Completed</option>\n            </select>\n            ";
       }
     } else {
-      return "<a href=\"#\" class=\"btn btn-firestore\">Add To List</a>";
+      return "<a href=\"#\" class=\"btn btn-firestore\" data-anime='{\"id\":\"".concat(animeData.animeid, "\",\"title\":\"").concat(animeData.title, "\"}'>Add To List</a>");
     }
   }(), "\n      <div id=\"episode-watcher\" data-anime-id=\"").concat(animeData.animeid, "\">\n         <input\n            type=\"text\"\n            id=\"episode-num-input\"\n            placeholder=\"enter episode num here\"\n            />\n         <a href=\"#\" class=\"watch-btn\">Watch</a>\n      </div>\n   </div>\n   </div>\n  ");
 };
@@ -15429,7 +15562,7 @@ views.searchBtn.addEventListener("click", /*#__PURE__*/function () {
             data = _context3.sent;
 
             if (data.length === 0) {
-              views.showAlert("danger", "ApiError : Nothing Found : ( ");
+              views.showAlert("danger", "ApiError : Nothing Found :( ");
               views.sectionC["default"]();
             } else {
               views.searchResultsState(data);
@@ -15458,7 +15591,7 @@ views.searchBtn.addEventListener("click", /*#__PURE__*/function () {
 }());
 views.mainUI.addEventListener("click", /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
-    var renderAnimeTitle, _renderAnimeTitle, animeid, _animeid, _animeid2, episodeNumber, _animeid3, data, _data$vidcdn, gogocdn, _data$streamsb, streamsb, _data$streamtape, streamtape, _data$doodstream, doodstream, _data$server, hydrax, _data$mixdrop, mixdrop, _data$streamhd, streamhd, streamObj, newSrc;
+    var renderAnimeTitle, _renderAnimeTitle, animeid, _animeid, _animeid2, episodeNumber, _animeid3, data, _data$vidcdn, gogocdn, _data$streamsb, streamsb, _data$streamtape, streamtape, _data$doodstream, doodstream, _data$server, hydrax, _data$mixdrop, mixdrop, _data$streamhd, streamhd, streamObj, newSrc, _JSON$parse, id, title, _animeid4;
 
     return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
@@ -15490,18 +15623,15 @@ views.mainUI.addEventListener("click", /*#__PURE__*/function () {
                           });
 
                           if (!userList) {
-                            console.log("not in user list");
                             views.renderAnimeTitle(animeData);
                           } else {
-                            console.log(" in user list \uD83D\uDE0E"); //extra param to render changed actions div
-
+                            //extra param to render changed actions div
                             views.renderAnimeTitle(animeData, {
                               inList: true,
                               status: "".concat(userList.status)
                             });
                           }
-                        } //TODO : fix error on logged out state
-                        // views.sectionC.default();
+                        } // views.sectionC.default();
 
 
                       case 6:
@@ -15615,16 +15745,152 @@ views.mainUI.addEventListener("click", /*#__PURE__*/function () {
               views.renderChangedEpisodePlayer(newSrc);
             }
 
-          case 35:
+            if (!e.target.classList.contains("btn-firestore")) {
+              _context5.next = 48;
+              break;
+            }
+
+            _JSON$parse = JSON.parse(e.target.getAttribute("data-anime")), id = _JSON$parse.id, title = _JSON$parse.title;
+            _context5.prev = 37;
+            views.renderSpinner("section-b");
+            _context5.next = 41;
+            return model.add(id, title);
+
+          case 41:
+            views.showAlert("info", "Anime Added !");
+            views.renderUserAnimeList(model.get().data.list);
+            _context5.next = 48;
+            break;
+
+          case 45:
+            _context5.prev = 45;
+            _context5.t0 = _context5["catch"](37);
+            views.showAlert("danger", "Error : can't add to list when not logged in");
+
+          case 48:
+            if (!e.target.classList.contains("btn-firestore-remove")) {
+              _context5.next = 55;
+              break;
+            }
+
+            _animeid4 = e.target.nextElementSibling.nextElementSibling.getAttribute("data-anime-id");
+            views.renderSpinner("section-b");
+            _context5.next = 53;
+            return model.remove(_animeid4);
+
+          case 53:
+            views.showAlert("info", "Anime removed ! ");
+            views.renderUserAnimeList(model.get().data.list);
+
+          case 55:
           case "end":
             return _context5.stop();
         }
       }
-    }, _callee5);
+    }, _callee5, null, [[37, 45]]);
   }));
 
   return function (_x4) {
     return _ref4.apply(this, arguments);
+  };
+}());
+views.mainUI.addEventListener("change", /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
+    var animeid, status;
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            if (!(e.target.id === "status-selector")) {
+              _context6.next = 15;
+              break;
+            }
+
+            animeid = e.target.nextElementSibling.getAttribute("data-anime-id");
+            status = e.target.value;
+            console.log(animeid, " ", status);
+            views.renderSpinner("section-b");
+            _context6.prev = 5;
+            _context6.next = 8;
+            return model.changeStatus(animeid, status);
+
+          case 8:
+            views.showAlert("info", "Changed anime status !");
+            views.renderUserAnimeList(model.get().data.list);
+            _context6.next = 15;
+            break;
+
+          case 12:
+            _context6.prev = 12;
+            _context6.t0 = _context6["catch"](5);
+            console.log(_context6.t0);
+
+          case 15:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6, null, [[5, 12]]);
+  }));
+
+  return function (_x6) {
+    return _ref5.apply(this, arguments);
+  };
+}());
+views.userList.addEventListener("click", /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e) {
+    var animeid, apiData, animeData, userList;
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            e.preventDefault();
+
+            if (!(e.target.classList.contains("item") || e.target.classList.contains("item-name"))) {
+              _context7.next = 9;
+              break;
+            }
+
+            animeid = e.target.getAttribute("data-anime-id");
+            views.renderSpinner("section-c");
+            _context7.next = 6;
+            return api.get("https://powerful-beach-14543.herokuapp.com/getdetails/".concat(animeid));
+
+          case 6:
+            apiData = _context7.sent;
+            animeData = _objectSpread(_objectSpread({}, apiData), {}, {
+              animeid: animeid
+            });
+
+            if (!localStorage.getItem("local")) {
+              //logged out state
+              views.renderAnimeTitle(animeData);
+            } else {
+              userList = model.get().data.list.find(function (anime) {
+                return anime.id === animeid;
+              });
+
+              if (!userList) {
+                views.renderAnimeTitle(animeData);
+              } else {
+                //extra param to render changed actions div
+                views.renderAnimeTitle(animeData, {
+                  inList: true,
+                  status: "".concat(userList.status)
+                });
+              }
+            }
+
+          case 9:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+
+  return function (_x7) {
+    return _ref6.apply(this, arguments);
   };
 }());
 })();
