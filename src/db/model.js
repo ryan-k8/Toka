@@ -78,9 +78,13 @@ class LocalStorage {
             title: anime.title,
             status: status,
           };
+        } else {
+          return anime;
         }
       }),
     };
+    console.log(`inside model.changeStatus`);
+    console.log(newUserList);
 
     await FirebaseHelper.setUserList(userEmail, newUserList);
     await this.update();

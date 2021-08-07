@@ -51,6 +51,7 @@ class FirebaseHelper {
           } else {
             resolve({
               exists: false,
+              list: [],
             });
           }
         })

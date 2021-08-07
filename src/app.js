@@ -265,13 +265,10 @@ views.mainUI.addEventListener("change", async (e) => {
     console.log(animeid, " ", status);
 
     views.renderSpinner("section-b");
-    try {
-      await model.changeStatus(animeid, status);
-      views.showAlert("info", "Changed anime status !");
-      views.renderUserAnimeList(model.get().data.list);
-    } catch (err) {
-      console.log(err);
-    }
+
+    await model.changeStatus(animeid, status);
+    views.showAlert("info", "Changed anime status !");
+    views.renderUserAnimeList(model.get().data.list);
   }
 });
 

@@ -14459,7 +14459,8 @@ var FirebaseHelper = /*#__PURE__*/function () {
             }, doc.data()));
           } else {
             resolve({
-              exists: false
+              exists: false,
+              list: []
             });
           }
         })["catch"](function (err) {
@@ -14686,17 +14687,21 @@ var LocalStorage = /*#__PURE__*/function () {
                         title: anime.title,
                         status: status
                       };
+                    } else {
+                      return anime;
                     }
                   })
                 };
-                _context4.next = 4;
+                console.log("inside model.changeStatus");
+                console.log(newUserList);
+                _context4.next = 6;
                 return _firebase__WEBPACK_IMPORTED_MODULE_0__.default.setUserList(userEmail, newUserList);
 
-              case 4:
-                _context4.next = 6;
+              case 6:
+                _context4.next = 8;
                 return this.update();
 
-              case 6:
+              case 8:
               case "end":
                 return _context4.stop();
             }
@@ -15802,7 +15807,7 @@ views.mainUI.addEventListener("change", /*#__PURE__*/function () {
         switch (_context6.prev = _context6.next) {
           case 0:
             if (!(e.target.id === "status-selector")) {
-              _context6.next = 15;
+              _context6.next = 9;
               break;
             }
 
@@ -15810,27 +15815,19 @@ views.mainUI.addEventListener("change", /*#__PURE__*/function () {
             status = e.target.value;
             console.log(animeid, " ", status);
             views.renderSpinner("section-b");
-            _context6.prev = 5;
-            _context6.next = 8;
+            _context6.next = 7;
             return model.changeStatus(animeid, status);
 
-          case 8:
+          case 7:
             views.showAlert("info", "Changed anime status !");
             views.renderUserAnimeList(model.get().data.list);
-            _context6.next = 15;
-            break;
 
-          case 12:
-            _context6.prev = 12;
-            _context6.t0 = _context6["catch"](5);
-            console.log(_context6.t0);
-
-          case 15:
+          case 9:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, null, [[5, 12]]);
+    }, _callee6);
   }));
 
   return function (_x6) {
