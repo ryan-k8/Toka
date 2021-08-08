@@ -1,6 +1,19 @@
-# Toka    [![Netlify Status](https://api.netlify.com/api/v1/badges/35a3de85-7fde-4241-8d0a-6279425d3142/deploy-status)](https://app.netlify.com/sites/toka-js/deploys)
- 
-vanilla js app for anime  based on state pattern.
-it follows model-view seperation concept from mvc design pattern although poorely implemented.
+# Toka [![Netlify Status](https://api.netlify.com/api/v1/badges/35a3de85-7fde-4241-8d0a-6279425d3142/deploy-status)](https://app.netlify.com/sites/toka-js/deploys)
 
-backed by firebase for auth and database & a custom api 
+Vanilla js app for anime based on state pattern and mvc design pattern (for most part).
+backed by firebase for auth and database & a custom api
+
+<h3 align="left"></h3>
+<p align="left">
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a>
+<a href="https://firebase.google.com/" target="_blank"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a>
+<a href="netlify.com" target="_blank"><img src="https://iconape.com/wp-content/files/dw/349197/svg/netlify-seeklogo.com.svg" alt="netlify" height="40" width="40"></a>
+</p>
+
+###### 🔴 application not meant to be responsive at all (requires width > 1k px )
+
+#### <details> <summary>Screenshots</summary> <img src="https://user-images.githubusercontent.com/75524300/128637890-afaa83ac-1795-403a-8f5f-d47a57165411.png"><img src="https://user-images.githubusercontent.com/75524300/128637905-e5c94237-145b-4579-8d6a-fba174516e27.png"><img src="https://user-images.githubusercontent.com/75524300/128637906-48767249-f0ba-4054-ba4e-85cceb7c68ec.png"></details>
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
