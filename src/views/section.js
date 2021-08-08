@@ -6,6 +6,7 @@ import * as statesC from "./states/sectionC";
 class SectionA {
   constructor() {
     this.currentState = null;
+    this.selector = document.getElementById("section-a");
   }
 
   init() {
@@ -20,6 +21,7 @@ class SectionA {
 class SectionB {
   constructor() {
     this.currentState = null;
+    this.selector = document.getElementById("section-b");
   }
 
   init() {
@@ -34,6 +36,7 @@ class SectionB {
 class SectionC {
   constructor() {
     this.currentState = null;
+    this.selector = document.getElementById("section-c");
   }
 
   default() {

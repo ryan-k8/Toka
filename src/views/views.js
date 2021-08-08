@@ -5,17 +5,12 @@ import * as statesC from "./states/sectionC";
 
 class Views {
   constructor() {
-    // three below are only for changing states
     this.sectionA = new SectionA(); //account
     this.sectionB = new SectionB(); // section-b (firebase lists)
     this.sectionC = new SectionC(); // section-c (main ui)
 
     this.searchInput = document.getElementById("searchinput");
     this.searchBtn = document.querySelector(".search-btn");
-    this.accountComponent = document.querySelector(".account-div");
-
-    this.mainUI = document.getElementById("section-c");
-    this.userList = document.getElementById("section-b");
 
     //setting up initial states
     this.sectionA.init();
@@ -23,7 +18,7 @@ class Views {
     this.sectionC.init();
   }
 
-  showAlert(status, message) {
+  renderAlert(status, message) {
     const alertDiv = document.createElement("div");
     alertDiv.classList.add("alert", `${status}`, "p-1");
     alertDiv.innerHTML = `
@@ -36,7 +31,7 @@ class Views {
     }, 2200);
   }
 
-  accountlogInState(profile) {
+  renderAccountLogIn(profile) {
     this.sectionA.change(new statesA.loggedInState(profile));
     this.sectionC.change(new statesC.loggedInState(profile));
   }
@@ -47,11 +42,10 @@ class Views {
     }
     if (sectionId === "section-b") {
       this.sectionB.change(new statesB.spinnerState());
-      // console.log("spinners on section-b hehe");
     }
   }
 
-  searchResultsState(result) {
+  renderSearchResults(result) {
     this.sectionC.change(new statesC.searchResultState(result));
   }
 

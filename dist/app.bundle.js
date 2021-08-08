@@ -14393,6 +14393,693 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var core_js_stable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var core_js_stable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_stable__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(395);
+/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _db_firebase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(397);
+/* harmony import */ var _db_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(398);
+/* harmony import */ var _api_lazyreq__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(399);
+/* harmony import */ var _views_views__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(400);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+// the 2 imports below are import for transpiling async/await
+
+
+
+
+
+
+
+var Controller = /*#__PURE__*/function () {
+  function Controller() {
+    _classCallCheck(this, Controller);
+
+    this.views = new _views_views__WEBPACK_IMPORTED_MODULE_5__.default();
+    this.api = new _api_lazyreq__WEBPACK_IMPORTED_MODULE_4__.default();
+    this.model = new _db_model__WEBPACK_IMPORTED_MODULE_3__.LocalStorage();
+  }
+
+  _createClass(Controller, [{
+    key: "sectionAClickHandler",
+    value: function () {
+      var _sectionAClickHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var profile, _profile, userName, profileImage, userEmail, userList, result, query, data;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+
+                if (!(e.target.id === "sign-in-btn")) {
+                  _context.next = 28;
+                  break;
+                }
+
+                _context.prev = 2;
+                _context.next = 5;
+                return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignIn();
+
+              case 5:
+                profile = _context.sent;
+                _profile = profile, userName = _profile.displayName, profileImage = _profile.photoURL, userEmail = _profile.email;
+                profile = {
+                  userName: userName,
+                  profileImage: profileImage,
+                  userEmail: userEmail
+                };
+                this.model.init(profile);
+                console.log();
+                this.views.renderAccountLogIn(profile);
+                this.views.renderAlert("success", "You are Successfully logged in");
+                this.views.renderSpinner("section-b"); //firebase user's list
+
+                _context.next = 15;
+                return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.getUserList(userEmail);
+
+              case 15:
+                userList = _context.sent;
+
+                if (userList.exists) {
+                  _context.next = 22;
+                  break;
+                }
+
+                _context.next = 19;
+                return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.setUserList(userEmail, {
+                  list: null
+                });
+
+              case 19:
+                this.views.sectionB.init();
+                _context.next = 23;
+                break;
+
+              case 22:
+                this.views.renderUserAnimeList(userList.list);
+
+              case 23:
+                _context.next = 28;
+                break;
+
+              case 25:
+                _context.prev = 25;
+                _context.t0 = _context["catch"](2);
+                this.views.renderAlert("danger", _context.t0);
+
+              case 28:
+                if (!(e.target.id === "sign-out-btn")) {
+                  _context.next = 43;
+                  break;
+                }
+
+                _context.prev = 29;
+                _context.next = 32;
+                return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignOut();
+
+              case 32:
+                result = _context.sent;
+                localStorage.clear();
+                this.views.sectionB.init();
+                this.views.sectionC.init();
+                this.views.renderAlert("success", result);
+                _context.next = 42;
+                break;
+
+              case 39:
+                _context.prev = 39;
+                _context.t1 = _context["catch"](29);
+                console.log(_context.t1);
+
+              case 42:
+                this.views.sectionA.init();
+
+              case 43:
+                if (!e.target.classList.contains("search-btn")) {
+                  _context.next = 62;
+                  break;
+                }
+
+                if (!(this.views.searchInput.value.trim() === "")) {
+                  _context.next = 48;
+                  break;
+                }
+
+                this.views.renderAlert("danger", "please enter something :/");
+                _context.next = 62;
+                break;
+
+              case 48:
+                _context.prev = 48;
+                query = this.views.searchInput.value;
+                this.views.clearFields();
+                this.views.renderSpinner("section-c");
+                _context.next = 54;
+                return this.api.get("https://powerful-beach-14543.herokuapp.com/search/".concat(query));
+
+              case 54:
+                data = _context.sent;
+
+                if (data.length === 0) {
+                  this.views.renderAlert("danger", "ApiError : Nothing Found :( ");
+                  this.views.sectionC["default"]();
+                } else {
+                  this.views.renderSearchResults(data);
+                }
+
+                _context.next = 62;
+                break;
+
+              case 58:
+                _context.prev = 58;
+                _context.t2 = _context["catch"](48);
+                console.log(_context.t2);
+                this.views.renderAlert("danger", _context.t2);
+
+              case 62:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[2, 25], [29, 39], [48, 58]]);
+      }));
+
+      function sectionAClickHandler(_x) {
+        return _sectionAClickHandler.apply(this, arguments);
+      }
+
+      return sectionAClickHandler;
+    }()
+  }, {
+    key: "sectionAKeyUpHandler",
+    value: function () {
+      var _sectionAKeyUpHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var query, data;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(e.key === "Enter")) {
+                  _context2.next = 19;
+                  break;
+                }
+
+                if (!(e.target.value.trim() === "")) {
+                  _context2.next = 5;
+                  break;
+                }
+
+                this.views.renderAlert("danger", "please enter something :/");
+                _context2.next = 19;
+                break;
+
+              case 5:
+                _context2.prev = 5;
+                query = e.target.value;
+                this.views.searchInput.value = null;
+                this.views.renderSpinner("section-c");
+                _context2.next = 11;
+                return this.api.get("https://powerful-beach-14543.herokuapp.com/search/".concat(query));
+
+              case 11:
+                data = _context2.sent;
+
+                if (data.length === 0) {
+                  this.views.renderAlert("danger", "ApiError : Nothing Found : ( ");
+                  this.views.sectionC["default"]();
+                } else {
+                  this.views.renderSearchResults(data);
+                }
+
+                _context2.next = 19;
+                break;
+
+              case 15:
+                _context2.prev = 15;
+                _context2.t0 = _context2["catch"](5);
+                console.log(_context2.t0);
+                this.views.renderAlert("danger", _context2.t0);
+
+              case 19:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[5, 15]]);
+      }));
+
+      function sectionAKeyUpHandler(_x2) {
+        return _sectionAKeyUpHandler.apply(this, arguments);
+      }
+
+      return sectionAKeyUpHandler;
+    }()
+  }, {
+    key: "sectionBClickHandler",
+    value: function () {
+      var _sectionBClickHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+        var animeid, apiData, animeData, userList;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                e.preventDefault();
+
+                if (!(e.target.classList.contains("item") || e.target.classList.contains("item-name"))) {
+                  _context3.next = 9;
+                  break;
+                }
+
+                animeid = e.target.getAttribute("data-anime-id");
+                this.views.renderSpinner("section-c");
+                _context3.next = 6;
+                return this.api.get("https://powerful-beach-14543.herokuapp.com/getdetails/".concat(animeid));
+
+              case 6:
+                apiData = _context3.sent;
+                animeData = _objectSpread(_objectSpread({}, apiData), {}, {
+                  animeid: animeid
+                });
+
+                if (!localStorage.getItem("local")) {
+                  //logged out state
+                  this.views.renderAnimeTitle(animeData);
+                } else {
+                  userList = this.model.get().data.list.find(function (anime) {
+                    return anime.id === animeid;
+                  });
+
+                  if (!userList) {
+                    this.views.renderAnimeTitle(animeData);
+                  } else {
+                    //extra param to render changed actions div
+                    this.views.renderAnimeTitle(animeData, {
+                      inList: true,
+                      status: "".concat(userList.status)
+                    });
+                  }
+                }
+
+              case 9:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function sectionBClickHandler(_x3) {
+        return _sectionBClickHandler.apply(this, arguments);
+      }
+
+      return sectionBClickHandler;
+    }()
+  }, {
+    key: "sectionCClickHandler",
+    value: function () {
+      var _sectionCClickHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+        var _this = this;
+
+        var renderAnimeTitle, animeid, _animeid, _animeid2, episodeNumber, _animeid3, data, _data$vidcdn, gogocdn, _data$streamsb, streamsb, _data$streamtape, streamtape, _data$doodstream, doodstream, _data$server, hydrax, _data$mixdrop, mixdrop, _data$streamhd, streamhd, streamObj, newSrc, _JSON$parse, id, title, _animeid4;
+
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                e.preventDefault();
+
+                renderAnimeTitle = /*#__PURE__*/function () {
+                  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(animeid) {
+                    var apiData, animeData, userList;
+                    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                      while (1) {
+                        switch (_context4.prev = _context4.next) {
+                          case 0:
+                            _this.views.renderSpinner("section-c");
+
+                            _context4.next = 3;
+                            return _this.api.get("https://powerful-beach-14543.herokuapp.com/getdetails/".concat(animeid));
+
+                          case 3:
+                            apiData = _context4.sent;
+                            animeData = _objectSpread(_objectSpread({}, apiData), {}, {
+                              animeid: animeid
+                            });
+
+                            if (!localStorage.getItem("local")) {
+                              //logged out state
+                              _this.views.renderAnimeTitle(animeData);
+                            } else {
+                              userList = _this.model.get().data.list.find(function (anime) {
+                                return anime.id === animeid;
+                              });
+
+                              if (!userList) {
+                                _this.views.renderAnimeTitle(animeData);
+                              } else {
+                                //extra param to render changed actions div
+                                _this.views.renderAnimeTitle(animeData, {
+                                  inList: true,
+                                  status: "".concat(userList.status)
+                                });
+                              }
+                            } // this.views.sectionC.default();
+
+
+                          case 6:
+                          case "end":
+                            return _context4.stop();
+                        }
+                      }
+                    }, _callee4);
+                  }));
+
+                  return function renderAnimeTitle(_x5) {
+                    return _ref.apply(this, arguments);
+                  };
+                }();
+
+                if (!e.target.classList.contains("anime-selection")) {
+                  _context5.next = 20;
+                  break;
+                }
+
+                e.preventDefault();
+
+                if (!e.target.hasAttribute("data-anime-id")) {
+                  _context5.next = 10;
+                  break;
+                }
+
+                animeid = e.target.getAttribute("data-anime-id");
+                _context5.next = 8;
+                return renderAnimeTitle(animeid);
+
+              case 8:
+                _context5.next = 20;
+                break;
+
+              case 10:
+                if (!e.target.parentElement.hasAttribute("data-anime-id")) {
+                  _context5.next = 16;
+                  break;
+                }
+
+                _animeid = e.target.parentElement.getAttribute("data-anime-id");
+                _context5.next = 14;
+                return renderAnimeTitle(_animeid);
+
+              case 14:
+                _context5.next = 20;
+                break;
+
+              case 16:
+                if (!e.target.parentElement.parentElement.parentElement.hasAttribute("data-anime-id")) {
+                  _context5.next = 20;
+                  break;
+                }
+
+                _animeid2 = e.target.parentElement.parentElement.parentElement.getAttribute("data-anime-id");
+                _context5.next = 20;
+                return renderAnimeTitle(_animeid2);
+
+              case 20:
+                if (!(e.target.className === "watch-btn")) {
+                  _context5.next = 33;
+                  break;
+                }
+
+                episodeNumber = this.views.getEpNumber().trim();
+
+                if (!(episodeNumber === "")) {
+                  _context5.next = 27;
+                  break;
+                }
+
+                this.views.clearFields();
+                this.views.renderAlert("danger", "please enter something :/");
+                _context5.next = 33;
+                break;
+
+              case 27:
+                this.views.clearFields();
+                _animeid3 = e.target.parentElement.getAttribute("data-anime-id");
+                _context5.next = 31;
+                return this.api.get("https://powerful-beach-14543.herokuapp.com/stream/".concat(_animeid3, "/ep/").concat(episodeNumber));
+
+              case 31:
+                data = _context5.sent;
+
+                if (data.episode_exists === "true") {
+                  _data$vidcdn = data.vidcdn, gogocdn = _data$vidcdn === void 0 ? null : _data$vidcdn, _data$streamsb = data.streamsb, streamsb = _data$streamsb === void 0 ? null : _data$streamsb, _data$streamtape = data.streamtape, streamtape = _data$streamtape === void 0 ? null : _data$streamtape, _data$doodstream = data.doodstream, doodstream = _data$doodstream === void 0 ? null : _data$doodstream, _data$server = data.server, hydrax = _data$server === void 0 ? null : _data$server, _data$mixdrop = data.mixdrop, mixdrop = _data$mixdrop === void 0 ? null : _data$mixdrop, _data$streamhd = data.streamhd, streamhd = _data$streamhd === void 0 ? null : _data$streamhd;
+                  streamObj = {
+                    streamtape: streamtape,
+                    doodstream: doodstream,
+                    mixdrop: mixdrop,
+                    streamsb: streamsb,
+                    hydrax: hydrax,
+                    streamhd: streamhd,
+                    vidcdn: gogocdn
+                  };
+                  this.views.renderStreamPlayer(streamObj);
+                  this.views.renderAlert("success", "Episode found ! :)");
+                } else {
+                  this.views.renderAlert("danger", "Episode either doesn't exist or not found :-(");
+                }
+
+              case 33:
+                if (e.target.classList.contains("btn-stream")) {
+                  newSrc = e.target.getAttribute("data-video");
+                  this.views.renderChangedEpisodePlayer(newSrc);
+                }
+
+                if (!e.target.classList.contains("btn-firestore")) {
+                  _context5.next = 47;
+                  break;
+                }
+
+                _JSON$parse = JSON.parse(e.target.getAttribute("data-anime")), id = _JSON$parse.id, title = _JSON$parse.title;
+                _context5.prev = 36;
+                this.views.renderSpinner("section-b");
+                _context5.next = 40;
+                return this.model.add(id, title);
+
+              case 40:
+                this.views.renderAlert("info", "Anime Added !");
+                this.views.renderUserAnimeList(this.model.get().data.list);
+                _context5.next = 47;
+                break;
+
+              case 44:
+                _context5.prev = 44;
+                _context5.t0 = _context5["catch"](36);
+                this.views.renderAlert("danger", "Error : can't add to list when not logged in");
+
+              case 47:
+                if (!e.target.classList.contains("btn-firestore-remove")) {
+                  _context5.next = 54;
+                  break;
+                }
+
+                _animeid4 = e.target.nextElementSibling.nextElementSibling.getAttribute("data-anime-id");
+                this.views.renderSpinner("section-b");
+                _context5.next = 52;
+                return this.model.remove(_animeid4);
+
+              case 52:
+                this.views.renderAlert("info", "Anime removed ! ");
+                this.views.renderUserAnimeList(this.model.get().data.list);
+
+              case 54:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[36, 44]]);
+      }));
+
+      function sectionCClickHandler(_x4) {
+        return _sectionCClickHandler.apply(this, arguments);
+      }
+
+      return sectionCClickHandler;
+    }()
+  }, {
+    key: "sectionCChangeHandler",
+    value: function () {
+      var _sectionCChangeHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
+        var animeid, status;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                if (!(e.target.id === "status-selector")) {
+                  _context6.next = 9;
+                  break;
+                }
+
+                animeid = e.target.nextElementSibling.getAttribute("data-anime-id");
+                status = e.target.value;
+                console.log(animeid, " ", status);
+                this.views.renderSpinner("section-b");
+                _context6.next = 7;
+                return this.model.changeStatus(animeid, status);
+
+              case 7:
+                this.views.renderAlert("info", "Changed anime status !");
+                this.views.renderUserAnimeList(this.model.get().data.list);
+
+              case 9:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function sectionCChangeHandler(_x6) {
+        return _sectionCChangeHandler.apply(this, arguments);
+      }
+
+      return sectionCChangeHandler;
+    }()
+  }, {
+    key: "run",
+    value: function run() {
+      var _this2 = this;
+
+      this.views.sectionA.selector.addEventListener("click", /*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e) {
+          return regeneratorRuntime.wrap(function _callee7$(_context7) {
+            while (1) {
+              switch (_context7.prev = _context7.next) {
+                case 0:
+                  _this2.sectionAClickHandler(e);
+
+                case 1:
+                case "end":
+                  return _context7.stop();
+              }
+            }
+          }, _callee7);
+        }));
+
+        return function (_x7) {
+          return _ref2.apply(this, arguments);
+        };
+      }());
+      this.views.sectionA.selector.addEventListener("keyup", /*#__PURE__*/function () {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(e) {
+          return regeneratorRuntime.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  _this2.sectionAKeyUpHandler(e);
+
+                case 1:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8);
+        }));
+
+        return function (_x8) {
+          return _ref3.apply(this, arguments);
+        };
+      }());
+      this.views.sectionB.selector.addEventListener("click", /*#__PURE__*/function () {
+        var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(e) {
+          return regeneratorRuntime.wrap(function _callee9$(_context9) {
+            while (1) {
+              switch (_context9.prev = _context9.next) {
+                case 0:
+                  _this2.sectionBClickHandler(e);
+
+                case 1:
+                case "end":
+                  return _context9.stop();
+              }
+            }
+          }, _callee9);
+        }));
+
+        return function (_x9) {
+          return _ref4.apply(this, arguments);
+        };
+      }());
+      this.views.sectionC.selector.addEventListener("click", /*#__PURE__*/function () {
+        var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(e) {
+          return regeneratorRuntime.wrap(function _callee10$(_context10) {
+            while (1) {
+              switch (_context10.prev = _context10.next) {
+                case 0:
+                  _this2.sectionCClickHandler(e);
+
+                case 1:
+                case "end":
+                  return _context10.stop();
+              }
+            }
+          }, _callee10);
+        }));
+
+        return function (_x10) {
+          return _ref5.apply(this, arguments);
+        };
+      }());
+      this.views.sectionC.selector.addEventListener("change", /*#__PURE__*/function () {
+        var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(e) {
+          return regeneratorRuntime.wrap(function _callee11$(_context11) {
+            while (1) {
+              switch (_context11.prev = _context11.next) {
+                case 0:
+                  _this2.sectionCChangeHandler(e);
+
+                case 1:
+                case "end":
+                  return _context11.stop();
+              }
+            }
+          }, _callee11);
+        }));
+
+        return function (_x11) {
+          return _ref6.apply(this, arguments);
+        };
+      }());
+    }
+  }]);
+
+  return Controller;
+}();
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Controller);
+
+/***/ }),
+/* 397 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -14497,7 +15184,7 @@ _defineProperty(FirebaseHelper, "provider", new firebase.auth.GoogleAuthProvider
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FirebaseHelper);
 
 /***/ }),
-/* 397 */
+/* 398 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14505,7 +15192,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "LocalStorage": () => (/* binding */ LocalStorage)
 /* harmony export */ });
-/* harmony import */ var _firebase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(396);
+/* harmony import */ var _firebase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(397);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -14728,7 +15415,7 @@ var LocalStorage = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14857,7 +15544,7 @@ var lazyReq = /*#__PURE__*/function () {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (lazyReq);
 
 /***/ }),
-/* 399 */
+/* 400 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14865,10 +15552,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _section__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(400);
-/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(401);
-/* harmony import */ var _states_sectionB__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(402);
-/* harmony import */ var _states_sectionC__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(403);
+/* harmony import */ var _section__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(401);
+/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(402);
+/* harmony import */ var _states_sectionB__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(403);
+/* harmony import */ var _states_sectionC__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(404);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -14884,7 +15571,6 @@ var Views = /*#__PURE__*/function () {
   function Views() {
     _classCallCheck(this, Views);
 
-    // three below are only for changing states
     this.sectionA = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionA(); //account
 
     this.sectionB = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionB(); // section-b (firebase lists)
@@ -14892,10 +15578,7 @@ var Views = /*#__PURE__*/function () {
     this.sectionC = new _section__WEBPACK_IMPORTED_MODULE_0__.SectionC(); // section-c (main ui)
 
     this.searchInput = document.getElementById("searchinput");
-    this.searchBtn = document.querySelector(".search-btn");
-    this.accountComponent = document.querySelector(".account-div");
-    this.mainUI = document.getElementById("section-c");
-    this.userList = document.getElementById("section-b"); //setting up initial states
+    this.searchBtn = document.querySelector(".search-btn"); //setting up initial states
 
     this.sectionA.init();
     this.sectionB.init();
@@ -14903,8 +15586,8 @@ var Views = /*#__PURE__*/function () {
   }
 
   _createClass(Views, [{
-    key: "showAlert",
-    value: function showAlert(status, message) {
+    key: "renderAlert",
+    value: function renderAlert(status, message) {
       var alertDiv = document.createElement("div");
       alertDiv.classList.add("alert", "".concat(status), "p-1");
       alertDiv.innerHTML = "\n    <p class=\"alert-message\">".concat(message, "</p>\n  <i class=\"alert-close-btn fas fa-times\"></i>\n    ");
@@ -14914,8 +15597,8 @@ var Views = /*#__PURE__*/function () {
       }, 2200);
     }
   }, {
-    key: "accountlogInState",
-    value: function accountlogInState(profile) {
+    key: "renderAccountLogIn",
+    value: function renderAccountLogIn(profile) {
       this.sectionA.change(new _states_sectionA__WEBPACK_IMPORTED_MODULE_1__.loggedInState(profile));
       this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.loggedInState(profile));
     }
@@ -14927,12 +15610,12 @@ var Views = /*#__PURE__*/function () {
       }
 
       if (sectionId === "section-b") {
-        this.sectionB.change(new _states_sectionB__WEBPACK_IMPORTED_MODULE_2__.spinnerState()); // console.log("spinners on section-b hehe");
+        this.sectionB.change(new _states_sectionB__WEBPACK_IMPORTED_MODULE_2__.spinnerState());
       }
     }
   }, {
-    key: "searchResultsState",
-    value: function searchResultsState(result) {
+    key: "renderSearchResults",
+    value: function renderSearchResults(result) {
       this.sectionC.change(new _states_sectionC__WEBPACK_IMPORTED_MODULE_3__.searchResultState(result));
     }
   }, {
@@ -14977,7 +15660,7 @@ var Views = /*#__PURE__*/function () {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Views);
 
 /***/ }),
-/* 400 */
+/* 401 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14987,9 +15670,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "SectionB": () => (/* binding */ SectionB),
 /* harmony export */   "SectionC": () => (/* binding */ SectionC)
 /* harmony export */ });
-/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(401);
-/* harmony import */ var _states_sectionB__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(402);
-/* harmony import */ var _states_sectionC__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(403);
+/* harmony import */ var _states_sectionA__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(402);
+/* harmony import */ var _states_sectionB__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(403);
+/* harmony import */ var _states_sectionC__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(404);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -15005,6 +15688,7 @@ var SectionA = /*#__PURE__*/function () {
     _classCallCheck(this, SectionA);
 
     this.currentState = null;
+    this.selector = document.getElementById("section-a");
   }
 
   _createClass(SectionA, [{
@@ -15027,6 +15711,7 @@ var SectionB = /*#__PURE__*/function () {
     _classCallCheck(this, SectionB);
 
     this.currentState = null;
+    this.selector = document.getElementById("section-b");
   }
 
   _createClass(SectionB, [{
@@ -15049,6 +15734,7 @@ var SectionC = /*#__PURE__*/function () {
     _classCallCheck(this, SectionC);
 
     this.currentState = null;
+    this.selector = document.getElementById("section-c");
   }
 
   _createClass(SectionC, [{
@@ -15076,7 +15762,7 @@ var SectionC = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 401 */
+/* 402 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15097,7 +15783,7 @@ var loggedInState = function loggedInState(profile) {
 
 
 /***/ }),
-/* 402 */
+/* 403 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15132,7 +15818,7 @@ var userListState = function userListState(userAnimeList) {
 
 
 /***/ }),
-/* 403 */
+/* 404 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15349,547 +16035,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_stable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_stable__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(395);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _db_firebase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(396);
-/* harmony import */ var _db_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(397);
-/* harmony import */ var _api_lazyreq__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(398);
-/* harmony import */ var _views_views__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(399);
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+/* harmony import */ var _controller_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(396);
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-// the 2 imports below are import for transpiling async/await
-
-
-
-
-
-
-var views = new _views_views__WEBPACK_IMPORTED_MODULE_5__.default();
-var api = new _api_lazyreq__WEBPACK_IMPORTED_MODULE_4__.default();
-var model = new _db_model__WEBPACK_IMPORTED_MODULE_3__.LocalStorage(); //account login/logout
-
-views.accountComponent.addEventListener("click", /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    var profile, _profile, userName, profileImage, userEmail, userList, result;
-
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            e.preventDefault();
-
-            if (!(e.target.id === "sign-in-btn")) {
-              _context.next = 27;
-              break;
-            }
-
-            _context.prev = 2;
-            _context.next = 5;
-            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignIn();
-
-          case 5:
-            profile = _context.sent;
-            _profile = profile, userName = _profile.displayName, profileImage = _profile.photoURL, userEmail = _profile.email;
-            profile = {
-              userName: userName,
-              profileImage: profileImage,
-              userEmail: userEmail
-            };
-            model.init(profile);
-            views.accountlogInState(profile);
-            views.showAlert("success", "You are Successfully logged in");
-            views.renderSpinner("section-b"); //firebase user's list
-
-            _context.next = 14;
-            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.getUserList(userEmail);
-
-          case 14:
-            userList = _context.sent;
-
-            if (userList.exists) {
-              _context.next = 21;
-              break;
-            }
-
-            _context.next = 18;
-            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.setUserList(userEmail, {
-              list: null
-            });
-
-          case 18:
-            views.sectionB.init();
-            _context.next = 22;
-            break;
-
-          case 21:
-            views.renderUserAnimeList(userList.list);
-
-          case 22:
-            _context.next = 27;
-            break;
-
-          case 24:
-            _context.prev = 24;
-            _context.t0 = _context["catch"](2);
-            views.showAlert("danger", _context.t0);
-
-          case 27:
-            if (!(e.target.id === "sign-out-btn")) {
-              _context.next = 42;
-              break;
-            }
-
-            _context.prev = 28;
-            _context.next = 31;
-            return _db_firebase__WEBPACK_IMPORTED_MODULE_2__.default.authSignOut();
-
-          case 31:
-            result = _context.sent;
-            localStorage.clear();
-            views.sectionB.init();
-            views.sectionC.init();
-            views.showAlert("success", result);
-            _context.next = 41;
-            break;
-
-          case 38:
-            _context.prev = 38;
-            _context.t1 = _context["catch"](28);
-            console.log(_context.t1);
-
-          case 41:
-            views.sectionA.init();
-
-          case 42:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[2, 24], [28, 38]]);
-  }));
-
-  return function (_x) {
-    return _ref.apply(this, arguments);
-  };
-}()); // search
-
-views.searchInput.addEventListener("keyup", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-    var query, data;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            if (!(e.key === "Enter")) {
-              _context2.next = 19;
-              break;
-            }
-
-            if (!(e.target.value.trim() === "")) {
-              _context2.next = 5;
-              break;
-            }
-
-            views.showAlert("danger", "please enter something :/");
-            _context2.next = 19;
-            break;
-
-          case 5:
-            _context2.prev = 5;
-            query = e.target.value;
-            views.searchInput.value = null;
-            views.renderSpinner("section-c");
-            _context2.next = 11;
-            return api.get("https://powerful-beach-14543.herokuapp.com/search/".concat(query));
-
-          case 11:
-            data = _context2.sent;
-
-            if (data.length === 0) {
-              views.showAlert("danger", "ApiError : Nothing Found : ( ");
-              views.sectionC["default"]();
-            } else {
-              views.searchResultsState(data);
-            }
-
-            _context2.next = 19;
-            break;
-
-          case 15:
-            _context2.prev = 15;
-            _context2.t0 = _context2["catch"](5);
-            console.log(_context2.t0);
-            views.showAlert("danger", _context2.t0);
-
-          case 19:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, null, [[5, 15]]);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-views.searchBtn.addEventListener("click", /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-    var query, data;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            if (!(views.searchInput.value.trim() === "")) {
-              _context3.next = 4;
-              break;
-            }
-
-            views.showAlert("danger", "please enter something :/");
-            _context3.next = 18;
-            break;
-
-          case 4:
-            _context3.prev = 4;
-            query = views.searchInput.value;
-            views.clearFields();
-            views.renderSpinner("section-c");
-            _context3.next = 10;
-            return api.get("https://powerful-beach-14543.herokuapp.com/search/".concat(query));
-
-          case 10:
-            data = _context3.sent;
-
-            if (data.length === 0) {
-              views.showAlert("danger", "ApiError : Nothing Found :( ");
-              views.sectionC["default"]();
-            } else {
-              views.searchResultsState(data);
-            }
-
-            _context3.next = 18;
-            break;
-
-          case 14:
-            _context3.prev = 14;
-            _context3.t0 = _context3["catch"](4);
-            console.log(_context3.t0);
-            views.showAlert("danger", _context3.t0);
-
-          case 18:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, null, [[4, 14]]);
-  }));
-
-  return function (_x3) {
-    return _ref3.apply(this, arguments);
-  };
-}());
-views.mainUI.addEventListener("click", /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
-    var renderAnimeTitle, _renderAnimeTitle, animeid, _animeid, _animeid2, episodeNumber, _animeid3, data, _data$vidcdn, gogocdn, _data$streamsb, streamsb, _data$streamtape, streamtape, _data$doodstream, doodstream, _data$server, hydrax, _data$mixdrop, mixdrop, _data$streamhd, streamhd, streamObj, newSrc, _JSON$parse, id, title, _animeid4;
-
-    return regeneratorRuntime.wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            _renderAnimeTitle = function _renderAnimeTitle3() {
-              _renderAnimeTitle = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(animeid) {
-                var apiData, animeData, userList;
-                return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                  while (1) {
-                    switch (_context4.prev = _context4.next) {
-                      case 0:
-                        views.renderSpinner("section-c");
-                        _context4.next = 3;
-                        return api.get("https://powerful-beach-14543.herokuapp.com/getdetails/".concat(animeid));
-
-                      case 3:
-                        apiData = _context4.sent;
-                        animeData = _objectSpread(_objectSpread({}, apiData), {}, {
-                          animeid: animeid
-                        });
-
-                        if (!localStorage.getItem("local")) {
-                          //logged out state
-                          views.renderAnimeTitle(animeData);
-                        } else {
-                          userList = model.get().data.list.find(function (anime) {
-                            return anime.id === animeid;
-                          });
-
-                          if (!userList) {
-                            views.renderAnimeTitle(animeData);
-                          } else {
-                            //extra param to render changed actions div
-                            views.renderAnimeTitle(animeData, {
-                              inList: true,
-                              status: "".concat(userList.status)
-                            });
-                          }
-                        } // views.sectionC.default();
-
-
-                      case 6:
-                      case "end":
-                        return _context4.stop();
-                    }
-                  }
-                }, _callee4);
-              }));
-              return _renderAnimeTitle.apply(this, arguments);
-            };
-
-            renderAnimeTitle = function _renderAnimeTitle2(_x5) {
-              return _renderAnimeTitle.apply(this, arguments);
-            };
-
-            e.preventDefault();
-
-            if (!e.target.classList.contains("anime-selection")) {
-              _context5.next = 21;
-              break;
-            }
-
-            e.preventDefault();
-
-            if (!e.target.hasAttribute("data-anime-id")) {
-              _context5.next = 11;
-              break;
-            }
-
-            animeid = e.target.getAttribute("data-anime-id");
-            _context5.next = 9;
-            return renderAnimeTitle(animeid);
-
-          case 9:
-            _context5.next = 21;
-            break;
-
-          case 11:
-            if (!e.target.parentElement.hasAttribute("data-anime-id")) {
-              _context5.next = 17;
-              break;
-            }
-
-            _animeid = e.target.parentElement.getAttribute("data-anime-id");
-            _context5.next = 15;
-            return renderAnimeTitle(_animeid);
-
-          case 15:
-            _context5.next = 21;
-            break;
-
-          case 17:
-            if (!e.target.parentElement.parentElement.parentElement.hasAttribute("data-anime-id")) {
-              _context5.next = 21;
-              break;
-            }
-
-            _animeid2 = e.target.parentElement.parentElement.parentElement.getAttribute("data-anime-id"); // checkIfinUserList(animeid);
-
-            _context5.next = 21;
-            return renderAnimeTitle(_animeid2);
-
-          case 21:
-            if (!(e.target.className === "watch-btn")) {
-              _context5.next = 34;
-              break;
-            }
-
-            episodeNumber = views.getEpNumber().trim();
-
-            if (!(episodeNumber === "")) {
-              _context5.next = 28;
-              break;
-            }
-
-            views.clearFields();
-            views.showAlert("danger", "please enter something :/");
-            _context5.next = 34;
-            break;
-
-          case 28:
-            views.clearFields();
-            _animeid3 = e.target.parentElement.getAttribute("data-anime-id");
-            _context5.next = 32;
-            return api.get("https://powerful-beach-14543.herokuapp.com/stream/".concat(_animeid3, "/ep/").concat(episodeNumber));
-
-          case 32:
-            data = _context5.sent;
-
-            if (data.episode_exists === "true") {
-              _data$vidcdn = data.vidcdn, gogocdn = _data$vidcdn === void 0 ? null : _data$vidcdn, _data$streamsb = data.streamsb, streamsb = _data$streamsb === void 0 ? null : _data$streamsb, _data$streamtape = data.streamtape, streamtape = _data$streamtape === void 0 ? null : _data$streamtape, _data$doodstream = data.doodstream, doodstream = _data$doodstream === void 0 ? null : _data$doodstream, _data$server = data.server, hydrax = _data$server === void 0 ? null : _data$server, _data$mixdrop = data.mixdrop, mixdrop = _data$mixdrop === void 0 ? null : _data$mixdrop, _data$streamhd = data.streamhd, streamhd = _data$streamhd === void 0 ? null : _data$streamhd;
-              streamObj = {
-                streamtape: streamtape,
-                doodstream: doodstream,
-                mixdrop: mixdrop,
-                streamsb: streamsb,
-                hydrax: hydrax,
-                streamhd: streamhd,
-                vidcdn: gogocdn
-              };
-              views.renderStreamPlayer(streamObj);
-              views.showAlert("success", "Episode found ! :)");
-            } else {
-              views.showAlert("danger", "Episode either doesn't exist or not found :-(");
-            }
-
-          case 34:
-            if (e.target.classList.contains("btn-stream")) {
-              newSrc = e.target.getAttribute("data-video");
-              views.renderChangedEpisodePlayer(newSrc);
-            }
-
-            if (!e.target.classList.contains("btn-firestore")) {
-              _context5.next = 48;
-              break;
-            }
-
-            _JSON$parse = JSON.parse(e.target.getAttribute("data-anime")), id = _JSON$parse.id, title = _JSON$parse.title;
-            _context5.prev = 37;
-            views.renderSpinner("section-b");
-            _context5.next = 41;
-            return model.add(id, title);
-
-          case 41:
-            views.showAlert("info", "Anime Added !");
-            views.renderUserAnimeList(model.get().data.list);
-            _context5.next = 48;
-            break;
-
-          case 45:
-            _context5.prev = 45;
-            _context5.t0 = _context5["catch"](37);
-            views.showAlert("danger", "Error : can't add to list when not logged in");
-
-          case 48:
-            if (!e.target.classList.contains("btn-firestore-remove")) {
-              _context5.next = 55;
-              break;
-            }
-
-            _animeid4 = e.target.nextElementSibling.nextElementSibling.getAttribute("data-anime-id");
-            views.renderSpinner("section-b");
-            _context5.next = 53;
-            return model.remove(_animeid4);
-
-          case 53:
-            views.showAlert("info", "Anime removed ! ");
-            views.renderUserAnimeList(model.get().data.list);
-
-          case 55:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5, null, [[37, 45]]);
-  }));
-
-  return function (_x4) {
-    return _ref4.apply(this, arguments);
-  };
-}());
-views.mainUI.addEventListener("change", /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
-    var animeid, status;
-    return regeneratorRuntime.wrap(function _callee6$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            if (!(e.target.id === "status-selector")) {
-              _context6.next = 9;
-              break;
-            }
-
-            animeid = e.target.nextElementSibling.getAttribute("data-anime-id");
-            status = e.target.value;
-            console.log(animeid, " ", status);
-            views.renderSpinner("section-b");
-            _context6.next = 7;
-            return model.changeStatus(animeid, status);
-
-          case 7:
-            views.showAlert("info", "Changed anime status !");
-            views.renderUserAnimeList(model.get().data.list);
-
-          case 9:
-          case "end":
-            return _context6.stop();
-        }
-      }
-    }, _callee6);
-  }));
-
-  return function (_x6) {
-    return _ref5.apply(this, arguments);
-  };
-}());
-views.userList.addEventListener("click", /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e) {
-    var animeid, apiData, animeData, userList;
-    return regeneratorRuntime.wrap(function _callee7$(_context7) {
-      while (1) {
-        switch (_context7.prev = _context7.next) {
-          case 0:
-            e.preventDefault();
-
-            if (!(e.target.classList.contains("item") || e.target.classList.contains("item-name"))) {
-              _context7.next = 9;
-              break;
-            }
-
-            animeid = e.target.getAttribute("data-anime-id");
-            views.renderSpinner("section-c");
-            _context7.next = 6;
-            return api.get("https://powerful-beach-14543.herokuapp.com/getdetails/".concat(animeid));
-
-          case 6:
-            apiData = _context7.sent;
-            animeData = _objectSpread(_objectSpread({}, apiData), {}, {
-              animeid: animeid
-            });
-
-            if (!localStorage.getItem("local")) {
-              //logged out state
-              views.renderAnimeTitle(animeData);
-            } else {
-              userList = model.get().data.list.find(function (anime) {
-                return anime.id === animeid;
-              });
-
-              if (!userList) {
-                views.renderAnimeTitle(animeData);
-              } else {
-                //extra param to render changed actions div
-                views.renderAnimeTitle(animeData, {
-                  inList: true,
-                  status: "".concat(userList.status)
-                });
-              }
-            }
-
-          case 9:
-          case "end":
-            return _context7.stop();
-        }
-      }
-    }, _callee7);
-  }));
-
-  return function (_x7) {
-    return _ref6.apply(this, arguments);
-  };
-}());
+var app = new _controller_controller__WEBPACK_IMPORTED_MODULE_2__.default();
+app.run();
 })();
 
 /******/ })()
