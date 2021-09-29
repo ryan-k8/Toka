@@ -11,7 +11,7 @@ backed by firebase for auth and database & a custom api
 </p>
 
 ###### 🔴 application not meant to be responsive at all (requires width > 1k px )
-
+###### 🔴 use adblocker (u-block origin )  for watching video (there are nsfw ads in the video player !!)
 #### <details> <summary>Screenshots</summary> <img src="https://user-images.githubusercontent.com/75524300/128637890-afaa83ac-1795-403a-8f5f-d47a57165411.png"><img src="https://user-images.githubusercontent.com/75524300/128637905-e5c94237-145b-4579-8d6a-fba174516e27.png"><img src="https://user-images.githubusercontent.com/75524300/128637906-48767249-f0ba-4054-ba4e-85cceb7c68ec.png"></details>
 
 ## License
