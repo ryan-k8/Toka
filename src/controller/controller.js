@@ -239,12 +239,12 @@ class Controller {
           } = data;
 
           const streamObj = {
-            streamtape: streamtape,
-            doodstream: doodstream,
-            mixdrop: mixdrop,
-            streamsb: streamsb,
+            // streamtape: streamtape,
+            // doodstream: doodstream,
+            // mixdrop: mixdrop,
+            // streamsb: streamsb,
             hydrax: hydrax,
-            streamhd: streamhd,
+            // streamhd: streamhd,
             vidcdn: gogocdn,
           };
 
