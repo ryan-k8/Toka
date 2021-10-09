@@ -5,7 +5,7 @@ backed by firebase for auth and database & a custom api
 
 #### hacktoberfest 2021 🎉
   - some issues (w/label) have been raised in the repo for other users to fix as part of celebrating hacktoberfest
-  - contributions to this repo will Probably NOT count towards your hacktoberfest. i will however add a accepted label to this repo
+  - contributions to this repo will Probably NOT count towards your hacktoberfest. I'm having a role of maintainer on hacktoberfest tho.
   - this is a learning project. feel free to ask anything (suggestions,questions & so on.)
 
 <h3 align="left"></h3>
